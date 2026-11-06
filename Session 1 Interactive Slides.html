@@ -1,0 +1,2538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session 1: Linear Equations | Digital SAT Math Interactive Slides</title>
+  <style>
+    :root {
+      --sat-navy: #142355;
+      --sat-navy-dark: #0d173a;
+      --sat-blue: #1e5ab4;
+      --sat-blue-light: #e8f0fc;
+      --sat-light: #f2f6fc;
+      --sat-gray: #464646;
+      --sat-muted: #5f6775;
+      --sat-border: #d0dae8;
+      --sat-green: #146e3c;
+      --sat-green-bg: #edf9f2;
+      --sat-red: #b41e1e;
+      --sat-red-bg: #fdf2f2;
+      --sat-amber: #b45309;
+      --sat-amber-bg: #fffbeb;
+      --surface: #ffffff;
+      --bg-app: #e9eef6;
+      --focus-ring: #0b57d0;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-app);
+      color: #1a202c;
+      line-height: 1.5;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Visually Hidden Utility (Modern Web Guidance canonical recipe) */
+    .visually-hidden:where(:not(:focus-within, :active)) {
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      overflow: hidden !important;
+      width: 1px !important;
+      height: 1px !important;
+      margin: -1px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      white-space: nowrap !important;
+    }
+
+    .skip-link {
+      background: var(--sat-navy);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 0 0 0.5rem 0;
+      text-decoration: none;
+      font-weight: 600;
+      z-index: 1000;
+    }
+    .skip-link:focus {
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    /* High-contrast keyboard focus indicator */
+    :where(a:any-link, button, input, select, textarea, [tabindex]):focus-visible {
+      outline: 3px solid var(--focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* Directional View Transitions */
+    @keyframes slide-to-left {
+      to { transform: translateX(-48px); opacity: 0; }
+    }
+    @keyframes slide-from-right {
+      from { transform: translateX(48px); opacity: 0; }
+    }
+    @keyframes slide-to-right {
+      to { transform: translateX(48px); opacity: 0; }
+    }
+    @keyframes slide-from-left {
+      from { transform: translateX(-48px); opacity: 0; }
+    }
+
+    ::view-transition-group(slide-card) {
+      animation: 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    html:active-view-transition-type(forward)::view-transition-old(slide-card) {
+      animation-name: slide-to-left;
+    }
+    html:active-view-transition-type(forward)::view-transition-new(slide-card) {
+      animation-name: slide-from-right;
+    }
+    html:active-view-transition-type(backward)::view-transition-old(slide-card) {
+      animation-name: slide-to-right;
+    }
+    html:active-view-transition-type(backward)::view-transition-new(slide-card) {
+      animation-name: slide-from-left;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(root),
+      ::view-transition-group(slide-card) {
+        animation: none !important;
+      }
+    }
+
+    /* Animated Element Entry & Exit for Hints, Steps, Solutions */
+    .reveal-panel {
+      display: block;
+      opacity: 1;
+      translate: 0 0;
+      transition:
+        display 0.28s,
+        opacity 0.28s ease-out,
+        translate 0.28s ease-out;
+      transition-behavior: allow-discrete;
+    }
+    @starting-style {
+      .reveal-panel {
+        opacity: 0;
+        translate: 0 -10px;
+      }
+    }
+    .reveal-panel:where([hidden], [data-closing]) {
+      opacity: 0;
+      translate: 0 -10px;
+    }
+    .reveal-panel[hidden] {
+      display: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-panel {
+        translate: none;
+        transition-duration: 0.08s;
+      }
+      @starting-style {
+        .reveal-panel {
+          translate: none;
+        }
+      }
+      .reveal-panel:where([hidden], [data-closing]) {
+        translate: none;
+      }
+    }
+
+    /* Top Header & Toolbar */
+    header.top-bar {
+      background: var(--sat-navy);
+      color: #fff;
+      padding: 0.55rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 30;
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .badge-pill {
+      background: var(--sat-blue);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .deck-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .toolbar-controls {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tool-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 0.45rem;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      min-block-size: 34px;
+      transition: background 0.15s;
+    }
+    .tool-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .tool-btn[aria-pressed="true"] {
+      background: #f59e0b;
+      color: #111827;
+      border-color: #fbbf24;
+    }
+
+    .timer-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(0, 0, 0, 0.28);
+      padding: 0.2rem 0.55rem;
+      border-radius: 0.45rem;
+      border: 1px solid rgba(255,255,255,0.18);
+      font-variant-numeric: tabular-nums;
+    }
+    .timer-display {
+      font-weight: 700;
+      font-size: 0.9rem;
+      min-inline-size: 3.1rem;
+      text-align: center;
+    }
+    .timer-display.warn { color: #fcd34d; }
+    .timer-display.danger { color: #fca5a5; }
+
+    .score-pill {
+      background: rgba(20, 110, 60, 0.9);
+      border: 1px solid #34d399;
+      color: #fff;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Section Navigation Strip */
+    nav.section-strip {
+      background: #fff;
+      border-bottom: 1px solid var(--sat-border);
+      padding: 0.35rem 1rem;
+      display: flex;
+      gap: 0.35rem;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+    .sec-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--sat-muted);
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      min-block-size: 30px;
+    }
+    .sec-btn:hover {
+      background: var(--sat-light);
+      color: var(--sat-navy);
+    }
+    .sec-btn[aria-current="true"] {
+      background: var(--sat-navy);
+      color: #fff;
+    }
+
+    /* Progress Bar */
+    .progress-track {
+      height: 4px;
+      background: #d5dfee;
+      width: 100%;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sat-blue), #2563eb);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    /* Main Stage */
+    main.stage {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      padding: 1rem 1.25rem;
+      position: relative;
+    }
+
+    .slide-shell {
+      view-transition-name: slide-card;
+      width: 100%;
+      max-width: 1160px;
+      background: var(--surface);
+      border-radius: 0.85rem;
+      box-shadow: 0 10px 28px rgba(20, 35, 85, 0.1);
+      border: 1px solid var(--sat-border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+      min-height: 560px;
+    }
+
+    /* Scratchpad Canvas Overlay */
+    canvas#scratchpad {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 20;
+      pointer-events: none;
+      touch-action: none;
+    }
+    canvas#scratchpad.active {
+      pointer-events: auto;
+      cursor: crosshair;
+    }
+    .draw-toolbar {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.9rem;
+      z-index: 25;
+      background: rgba(20, 35, 85, 0.94);
+      color: #fff;
+      padding: 0.35rem 0.6rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .draw-toolbar[hidden] {
+      display: none;
+    }
+    .color-swatch {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.5);
+      cursor: pointer;
+    }
+    .color-swatch[aria-pressed="true"] {
+      border-color: #fff;
+      transform: scale(1.15);
+    }
+
+    /* Slide Header & Body */
+    .slide-header {
+      background: var(--sat-navy);
+      color: #fff;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .slide-header h1 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .slide-subtitle {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .slide-body {
+      padding: 1.35rem 1.6rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Hero / Title Slide */
+    .hero-slide {
+      background: linear-gradient(135deg, var(--sat-navy) 0%, #1a337a 65%, var(--sat-blue) 100%);
+      color: #fff;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 3.5rem;
+      position: relative;
+    }
+    .hero-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: #93c5fd;
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .hero-slide h1 {
+      font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+      line-height: 1.18;
+      margin: 0 0 1rem 0;
+      max-width: 24ch;
+    }
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .hero-tag {
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.88rem;
+    }
+    .hero-start-btn {
+      margin-top: 2rem;
+      align-self: flex-start;
+      background: #fff;
+      color: var(--sat-navy);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 0.55rem;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    .hero-start-btn:hover {
+      background: var(--sat-light);
+    }
+
+    /* Layout Grids */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+    .two-col-even {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+    @media (max-width: 860px) {
+      .two-col, .two-col-even {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Callout Boxes matching LaTeX tcolorbox */
+    .box {
+      border-radius: 0.55rem;
+      border: 1.5px solid var(--sat-navy);
+      background: var(--sat-light);
+      overflow: hidden;
+    }
+    .box-title {
+      background: var(--sat-navy);
+      color: #fff;
+      padding: 0.45rem 0.9rem;
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .box-content {
+      padding: 0.85rem 1rem;
+      font-size: 0.95rem;
+    }
+    .box.desmos { border-color: var(--sat-blue); background: #f4f8ff; }
+    .box.desmos .box-title { background: var(--sat-blue); }
+
+    .box.problem { border-color: var(--sat-red); background: #fff; }
+    .box.problem .box-title { background: var(--sat-red); }
+
+    .box.solution { border-color: var(--sat-green); background: var(--sat-green-bg); }
+    .box.solution .box-title { background: var(--sat-green); }
+
+    .box.hint { border-color: var(--sat-amber); background: var(--sat-amber-bg); }
+    .box.hint .box-title { background: var(--sat-amber); }
+
+    /* Clean Math Typography */
+    .math {
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      font-size: 1.05em;
+    }
+    .math i, .math var {
+      font-style: italic;
+    }
+    .frac {
+      display: inline-flex;
+      flex-direction: column;
+      vertical-align: middle;
+      text-align: center;
+      padding: 0 0.18em;
+      font-size: 0.92em;
+      line-height: 1.1;
+    }
+    .frac > .num {
+      border-bottom: 1.3px solid currentColor;
+      padding: 0 0.15em 0.08em;
+    }
+    .frac > .den {
+      padding: 0.08em 0.15em 0;
+    }
+    .math-block {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid var(--sat-border);
+      border-radius: 0.45rem;
+      padding: 0.55rem 0.9rem;
+      margin: 0.5rem 0;
+      text-align: center;
+      font-size: 1.08rem;
+    }
+
+    /* Interactive Controls & Sliders */
+    .control-group {
+      margin-bottom: 0.7rem;
+    }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.88rem;
+      margin-bottom: 0.2rem;
+      color: var(--sat-navy);
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--sat-blue);
+      cursor: pointer;
+      min-block-size: 26px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.5rem;
+    }
+    .action-btn {
+      background: var(--sat-blue);
+      color: #fff;
+      border: none;
+      border-radius: 0.45rem;
+      padding: 0.48rem 0.9rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-block-size: 38px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .action-btn:hover { background: #184996; }
+    .action-btn.secondary {
+      background: #fff;
+      color: var(--sat-navy);
+      border: 1.5px solid var(--sat-navy);
+    }
+    .action-btn.secondary:hover { background: var(--sat-light); }
+    .action-btn.amber {
+      background: #fffbeb;
+      color: #92400e;
+      border: 1.5px solid #d97706;
+    }
+    .action-btn.green {
+      background: var(--sat-green);
+      color: #fff;
+    }
+    .action-btn[aria-pressed="true"] {
+      background: var(--sat-navy);
+      color: #fff;
+    }
+
+    /* Graph Card */
+    .graph-card {
+      background: #fff;
+      border: 1.5px solid var(--sat-border);
+      border-radius: 0.6rem;
+      padding: 0.65rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .graph-card svg {
+      width: 100%;
+      max-width: 390px;
+      height: auto;
+      display: block;
+    }
+
+    /* Multiple Choice Option Cards (Bluebook SAT Style) */
+    .mc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+    @media (max-width: 680px) {
+      .mc-grid { grid-template-columns: 1fr; }
+    }
+    .mc-row {
+      display: flex;
+      align-items: stretch;
+      gap: 0.4rem;
+    }
+    .mc-choice {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: #fff;
+      border: 2px solid #cbd5e1;
+      border-radius: 0.55rem;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.98rem;
+      text-align: left;
+      cursor: pointer;
+      min-block-size: 48px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .mc-choice:hover:not(:disabled) {
+      border-color: var(--sat-blue);
+      background: var(--sat-light);
+    }
+    .mc-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.8px solid var(--sat-navy);
+      color: var(--sat-navy);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .mc-choice.selected {
+      border-color: var(--sat-blue);
+      background: var(--sat-blue-light);
+    }
+    .mc-choice.selected .mc-letter {
+      background: var(--sat-blue);
+      border-color: var(--sat-blue);
+      color: #fff;
+    }
+    .mc-choice.correct {
+      border-color: var(--sat-green);
+      background: var(--sat-green-bg);
+    }
+    .mc-choice.correct .mc-letter {
+      background: var(--sat-green);
+      border-color: var(--sat-green);
+      color: #fff;
+    }
+    .mc-choice.wrong {
+      border-color: var(--sat-red);
+      background: var(--sat-red-bg);
+    }
+    .mc-choice.wrong .mc-letter {
+      background: var(--sat-red);
+      border-color: var(--sat-red);
+      color: #fff;
+    }
+    .mc-row.eliminated .mc-choice {
+      opacity: 0.42;
+      text-decoration: line-through;
+    }
+    .elim-btn {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: var(--sat-muted);
+      border-radius: 0.45rem;
+      padding: 0 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      min-inline-size: 36px;
+    }
+    .elim-btn[aria-pressed="true"] {
+      background: #fee2e2;
+      color: var(--sat-red);
+      border-color: #fca5a5;
+    }
+
+    /* Grid-In Input Form */
+    .gridin-form {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 0.75rem;
+      margin-top: 0.85rem;
+      background: var(--sat-light);
+      padding: 0.85rem 1rem;
+      border-radius: 0.55rem;
+      border: 1px solid var(--sat-border);
+    }
+    .gridin-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .gridin-field label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--sat-navy);
+    }
+    .gridin-hint {
+      font-size: 0.78rem;
+      color: var(--sat-muted);
+    }
+    .gridin-input {
+      font-size: 1.05rem;
+      padding: 0.55rem 0.75rem;
+      border: 2px solid #94a3b8;
+      border-radius: 0.45rem;
+      width: 180px;
+      min-height: 44px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-weight: 700;
+    }
+
+    .feedback-banner {
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.45rem;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .feedback-banner.ok {
+      background: var(--sat-green-bg);
+      color: var(--sat-green);
+      border: 1.5px solid var(--sat-green);
+    }
+    .feedback-banner.err {
+      background: var(--sat-red-bg);
+      color: var(--sat-red);
+      border: 1.5px solid var(--sat-red);
+    }
+
+    /* Data Tables */
+    table.sat-table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      background: #fff;
+      font-size: 0.95rem;
+      min-width: 150px;
+    }
+    table.sat-table caption {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--sat-muted);
+      margin-bottom: 0.3rem;
+    }
+    table.sat-table th,
+    table.sat-table td {
+      border: 1.5px solid var(--sat-navy);
+      padding: 0.4rem 0.9rem;
+      text-align: center;
+    }
+    table.sat-table th {
+      background: var(--sat-navy);
+      color: #fff;
+    }
+
+    /* Cover-up interactive equation */
+    .cover-eq {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      font-size: 1.45rem;
+      font-weight: 700;
+      padding: 0.7rem;
+      background: #fff;
+      border: 2px dashed var(--sat-blue);
+      border-radius: 0.55rem;
+      margin: 0.5rem 0;
+    }
+    .cover-term {
+      padding: 0.2rem 0.55rem;
+      border-radius: 0.35rem;
+      transition: background 0.2s, color 0.2s;
+    }
+    .cover-term.masked {
+      background: var(--sat-navy);
+      color: transparent;
+      position: relative;
+    }
+    .cover-term.masked::after {
+      content: "COVERED (= 0)";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #fff;
+      letter-spacing: 0.03em;
+    }
+
+    /* Footer Controls */
+    footer.bottom-nav {
+      background: #fff;
+      border-top: 1px solid var(--sat-border);
+      padding: 0.65rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .slide-counter {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--sat-gray);
+      font-variant-numeric: tabular-nums;
+    }
+    .nav-btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Modal Dialog for Slide Overview */
+    dialog#overview-modal {
+      border: none;
+      border-radius: 0.85rem;
+      max-width: 860px;
+      width: 92vw;
+      max-height: 84vh;
+      padding: 0;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+    dialog#overview-modal::backdrop {
+      background: rgba(13, 23, 58, 0.6);
+    }
+    .modal-head {
+      background: var(--sat-navy);
+      color: #fff;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-head h2 { margin: 0; font-size: 1.1rem; }
+    .modal-body {
+      padding: 1.1rem 1.25rem;
+      overflow-y: auto;
+      max-height: calc(84vh - 60px);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.6rem;
+    }
+    .overview-item {
+      background: var(--sat-light);
+      border: 1.5px solid var(--sat-border);
+      border-radius: 0.5rem;
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.84rem;
+    }
+    .overview-item:hover { border-color: var(--sat-blue); background: #e8f0fc; }
+    .overview-item.current { border-color: var(--sat-navy); background: #dbeafe; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <a href="#slide-heading" class="skip-link visually-hidden">Skip to slide content</a>
+
+  <!-- Centralized Polite Live Region for Screen Readers -->
+  <div id="live-announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="top-bar">
+    <div class="brand-group">
+      <span class="badge-pill">Phase 1 &bull; Session 1</span>
+      <p class="deck-title">Digital SAT Math: Linear Equations in 1 &amp; 2 Variables</p>
+    </div>
+
+    <div class="toolbar-controls">
+      <div class="timer-widget" role="group" aria-label="SAT Question Timer">
+        <span id="timer-readout" class="timer-display">01:15</span>
+        <button type="button" id="timer-toggle-btn" class="tool-btn" aria-pressed="false">Start 75s</button>
+        <button type="button" id="timer-reset-btn" class="tool-btn">Reset</button>
+      </div>
+
+      <button type="button" id="draw-toggle-btn" class="tool-btn" aria-pressed="false">Annotate</button>
+      <button type="button" id="overview-open-btn" class="tool-btn">All Slides (27)</button>
+      <span id="score-badge" class="score-pill">Drill Score: 0 / 15</span>
+    </div>
+  </header>
+
+  <nav class="section-strip" aria-label="Lesson sections" id="section-nav"></nav>
+  <div class="progress-track" aria-hidden="true">
+    <div id="progress-fill" class="progress-fill"></div>
+  </div>
+
+  <main class="stage" id="main-stage">
+    <div class="slide-shell" id="slide-shell">
+      <!-- Floating Annotation Toolbar -->
+      <div id="draw-toolbar" class="draw-toolbar" hidden>
+        <span style="font-size:0.78rem;font-weight:700;">Pen:</span>
+        <button type="button" class="color-swatch" data-color="#1e5ab4" aria-label="Blue pen" aria-pressed="true" style="background:#1e5ab4;"></button>
+        <button type="button" class="color-swatch" data-color="#b41e1e" aria-label="Red pen" aria-pressed="false" style="background:#b41e1e;"></button>
+        <button type="button" class="color-swatch" data-color="#146e3c" aria-label="Green pen" aria-pressed="false" style="background:#146e3c;"></button>
+        <button type="button" id="draw-clear-btn" class="tool-btn">Clear Ink</button>
+      </div>
+      <canvas id="scratchpad"></canvas>
+
+      <div id="slide-render-target" style="display:flex;flex-direction:column;flex:1;"></div>
+    </div>
+  </main>
+
+  <footer class="bottom-nav">
+    <div class="slide-counter" id="slide-counter">Slide 1 of 27</div>
+    <div style="font-size:0.8rem;color:var(--sat-muted);">Tip: Use <kbd>&larr;</kbd> and <kbd>&rarr;</kbd> arrow keys to switch slides</div>
+    <div class="nav-btn-group">
+      <button type="button" id="prev-slide-btn" class="action-btn secondary">&larr; Previous</button>
+      <button type="button" id="next-slide-btn" class="action-btn">Next &rarr;</button>
+    </div>
+  </footer>
+
+  <!-- Native Modal Dialog for Slide Overview -->
+  <dialog id="overview-modal" aria-labelledby="overview-title">
+    <div class="modal-head">
+      <h2 id="overview-title">Jump to Any Slide</h2>
+      <button type="button" id="overview-close-btn" class="tool-btn">Close &times;</button>
+    </div>
+    <div class="modal-body" id="overview-list"></div>
+  </dialog>
+
+  <script>
+    // =========================================================================
+    // Feature Detection: Discrete Display Transitions (Firefox Bug 1882408 Safe)
+    // =========================================================================
+    let supportsDisplayTransition;
+    function canTransitionDisplay() {
+      if (supportsDisplayTransition !== undefined) return supportsDisplayTransition;
+      if (!window.CSS?.supports?.('transition-behavior', 'allow-discrete') || !document.body) {
+        return false;
+      }
+      const probe = document.createElement('div');
+      probe.style.cssText = 'transition: display 1s allow-discrete !important; display: block;';
+      document.body.appendChild(probe);
+      getComputedStyle(probe).display;
+      probe.style.display = 'none';
+      supportsDisplayTransition = getComputedStyle(probe).display === 'block';
+      probe.remove();
+      return supportsDisplayTransition;
+    }
+
+    async function hidePanel(el) {
+      if (!el || el.hidden) return;
+      if (canTransitionDisplay()) {
+        el.hidden = true;
+      } else {
+        el.setAttribute('data-closing', '');
+      }
+      const animations = el.getAnimations ? el.getAnimations() : [];
+      if (animations.length > 0) {
+        await Promise.race([
+          Promise.allSettled(animations.map((a) => a.finished)),
+          new Promise((r) => setTimeout(r, 400))
+        ]);
+      }
+      if (el.hasAttribute('data-closing')) {
+        el.removeAttribute('data-closing');
+        el.hidden = true;
+      }
+    }
+
+    function showPanel(el) {
+      if (!el) return;
+      el.removeAttribute('data-closing');
+      el.hidden = false;
+    }
+
+    function announce(msg) {
+      const region = document.getElementById('live-announcer');
+      if (region) region.textContent = msg;
+    }
+
+    // Helper for clean stacked fractions
+    function frac(num, den) {
+      return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+    }
+
+    // =========================================================================
+    // Practice Problems Data (Exact Session 1 Exercises 1-15)
+    // =========================================================================
+    const PRACTICE_PROBLEMS = [
+      {
+        num: 1,
+        type: 'mc',
+        prompt: `Line <span class="math"><i>p</i></span> is defined by <span class="math">2<i>y</i> + 18<i>x</i> = 9</span>. Line <span class="math"><i>r</i></span> is perpendicular to line <span class="math"><i>p</i></span> in the <span class="math"><i>xy</i></span>-plane. What is the slope of line <span class="math"><i>r</i></span>?`,
+        choices: [
+          `&minus;9`,
+          `&minus;${frac('1','9')}`,
+          `${frac('1','9')}`,
+          `9`
+        ],
+        correctIndex: 2,
+        hint: `Careful! Notice that 2y is written BEFORE 18x. Put it in Ax + By = C order (18x + 2y = 9) before finding the slope!`,
+        trapFeedback: {
+          0: `Not quite — &minus;9 is the slope of line p itself! Line r is perpendicular, so flip and negate.`,
+          1: `Close! You flipped 9 to 1/9, and if you thought line p had slope +9 (from swapping A and B), you negated +1/9. Remember: 18x + 2y = 9 has m = &minus;9!`,
+          3: `Careful: +9 negates &minus;9, but perpendicular slopes also require taking the reciprocal (flipping to 1/9).`
+        },
+        solution: `<strong>1. Watch the swapped term order!</strong> Rewrite <span class="math">2<i>y</i> + 18<i>x</i> = 9</span> in standard <span class="math"><i>Ax</i> + <i>By</i> = <i>C</i></span> order: <span class="math">18<i>x</i> + 2<i>y</i> = 9</span>.<br>
+                   <strong>2. Find slope of line <i>p</i>:</strong> <span class="math"><i>m<sub>p</sub></i> = &minus;${frac('18','2')} = &minus;9</span>.<br>
+                   <strong>3. Perpendicular negative reciprocal:</strong> <span class="math"><i>m<sub>r</sub></i> = &minus;${frac('1','&minus;9')} = <strong>${frac('1','9')}</strong></span> &rArr; <strong>(C)</strong>.`
+      },
+      {
+        num: 2,
+        type: 'mc',
+        prompt: `If <span class="math">4(3<i>x</i> &minus; 2) + 7 = 35</span>, what is the value of <span class="math">3<i>x</i> &minus; 2</span>?`,
+        choices: [`3`, `7`, `9`, `11`],
+        correctIndex: 1,
+        hint: `SAT Speed Tactic: Don't expand or solve for x! Treat (3x - 2) as one single block U: 4U + 7 = 35.`,
+        trapFeedback: {
+          0: `Check what the question asks for! x = 3 is the value of x, NOT the value of 3x &minus; 2!`,
+          2: `Check your subtraction: 35 &minus; 7 = 28 (not 36), so dividing by 4 gives 7.`,
+          3: `Looks like 7 was added instead of subtracted: 35 + 7 = 42. Subtract 7 from both sides first!`
+        },
+        solution: `<strong>Block-Solving Shortcut:</strong> Isolate the entire expression <span class="math">(3<i>x</i> &minus; 2)</span> directly without finding <span class="math"><i>x</i></span>:<br>
+                   <div class="math-block math">4(3<i>x</i> &minus; 2) + 7 = 35 &rArr; 4(3<i>x</i> &minus; 2) = 28 &rArr; <strong>3<i>x</i> &minus; 2 = 7</strong> &rArr; <strong>(B)</strong></div>`
+      },
+      {
+        num: 3,
+        type: 'mc',
+        prompt: `Which of the following equations represents a line in the <span class="math"><i>xy</i></span>-plane that passes through the point <span class="math">(4, &minus;2)</span> and is parallel to the line <span class="math"><i>y</i> = &minus;3<i>x</i> + 7</span>?`,
+        choices: [
+          `<span class="math"><i>y</i> = &minus;3<i>x</i> + 10</span>`,
+          `<span class="math"><i>y</i> = &minus;3<i>x</i> + 14</span>`,
+          `<span class="math"><i>y</i> = ${frac('1','3')}<i>x</i> &minus; ${frac('10','3')}</span>`,
+          `<span class="math"><i>y</i> = 3<i>x</i> &minus; 14</span>`
+        ],
+        correctIndex: 0,
+        hint: `Parallel lines have the exact same slope (m = &minus;3). Eliminate (C) and (D) immediately, then test x = 4!`,
+        trapFeedback: {
+          1: `Sign slip! Plugging x = 4 into y = &minus;3x + 14 gives y = &minus;12 + 14 = +2, not &minus;2.`,
+          2: `1/3 is the perpendicular slope! Parallel lines keep the exact same slope m = &minus;3.`,
+          3: `Parallel lines keep m = &minus;3 (not +3).`
+        },
+        solution: `<strong>1. Same slope:</strong> Parallel to <span class="math"><i>y</i> = &minus;3<i>x</i> + 7</span> means <span class="math"><i>m</i> = &minus;3</span> (eliminates C and D).<br>
+                   <strong>2. Point-Slope Form with (4, &minus;2):</strong> <span class="math"><i>y</i> &minus; (&minus;2) = &minus;3(<i>x</i> &minus; 4) &rArr; <i>y</i> + 2 = &minus;3<i>x</i> + 12 &rArr; <strong><i>y</i> = &minus;3<i>x</i> + 10</strong></span> &rArr; <strong>(A)</strong>.`
+      },
+      {
+        num: 4,
+        type: 'mc',
+        prompt: `In the <span class="math"><i>xy</i></span>-plane, line <span class="math"><i>p</i></span> passes through the points <span class="math">(2, 7)</span> and <span class="math">(6, 15)</span>. What is the <span class="math"><i>y</i></span>-intercept of line <span class="math"><i>p</i></span>?`,
+        choices: [`(0, 1)`, `(0, 2)`, `(0, 3)`, `(0, 4)`],
+        correctIndex: 2,
+        hint: `Find the slope m = (15 - 7) / (6 - 2), or step backward by Δx = -2 from (2, 7) to reach x = 0!`,
+        trapFeedback: {
+          0: `Check your slope calculation: (15 &minus; 7)/(6 &minus; 2) = 8/4 = 2.`,
+          1: `(0, 2) uses the slope m = 2 as the y-intercept! Plug (2, 7) into y = 2x + b to find b.`,
+          3: `Check arithmetic: 7 = 2(2) + b &rArr; 7 = 4 + b &rArr; b = 3.`
+        },
+        solution: `<strong>Algebra:</strong> <span class="math"><i>m</i> = ${frac('15 &minus; 7','6 &minus; 2')} = ${frac('8','4')} = 2</span>. Plug <span class="math">(2, 7)</span> into <span class="math"><i>y</i> = 2<i>x</i> + <i>b</i></span>: <span class="math">7 = 2(2) + <i>b</i> &rArr; <i>b</i> = 3 &rArr; <strong>(0, 3)</strong></span>.<br>
+                   <strong>Desmos Shortcut:</strong> Put <span class="math">(2, 7)</span> and <span class="math">(6, 15)</span> into a Table and type <span class="math"><i>y</i><sub>1</sub> ~ <i>mx</i><sub>1</sub> + <i>b</i></span> &rArr; <strong>(C)</strong>.`
+      },
+      {
+        num: 5,
+        type: 'mc',
+        prompt: `A manufacturing plant makes 10-inch, 9-inch, and 7-inch frying pans. During a certain day, the number of 10-inch frying pans that the manufacturing plant makes is 4 times the number <span class="math"><i>n</i></span> of 9-inch frying pans it makes, and the number of 7-inch frying pans it makes is 10. During this day, the manufacturing plant makes 100 frying pans total. Which equation represents this situation?`,
+        choices: [
+          `<span class="math">10(4<i>n</i>) + 9<i>n</i> + 7(10) = 100</span>`,
+          `<span class="math">10<i>n</i> + 9<i>n</i> + 7<i>n</i> = 100</span>`,
+          `<span class="math">4<i>n</i> + 10 = 100</span>`,
+          `<span class="math">5<i>n</i> + 10 = 100</span>`
+        ],
+        correctIndex: 3,
+        hint: `100 is the total NUMBER of pans (not total inches!). Don't multiply by the pan size labels 10, 9, and 7 — and don't forget to count the n 9-inch pans!`,
+        trapFeedback: {
+          0: `Classic SAT Trap! "10-inch", "9-inch", and "7-inch" are just names/sizes of the pans, whereas 100 is the total count of pans.`,
+          1: `10, 9, and 7 are pan diameters, not counts!`,
+          2: `So close! 4n is only the 10-inch pans. Don't forget to add the n 9-inch pans as well: 4n + n + 10 = 100!`
+        },
+        solution: `<strong>Ignore size labels (10-in, 9-in, 7-in) when counting items!</strong><br>
+                   (# of 10-in pans) + (# of 9-in pans) + (# of 7-in pans) = <span class="math">4<i>n</i> + <i>n</i> + 10 = 100 &rArr; <strong>5<i>n</i> + 10 = 100</strong></span> &rArr; <strong>(D)</strong>.`
+      },
+      {
+        num: 6,
+        type: 'mc',
+        prompt: `The graph of the equation <span class="math"><i>ax</i> + <i>ky</i> = 6</span> is a line in the <span class="math"><i>xy</i></span>-plane, where <span class="math"><i>a</i></span> and <span class="math"><i>k</i></span> are constants. If the line contains the points <span class="math">(&minus;2, &minus;6)</span> and <span class="math">(0, &minus;3)</span>, what is the value of <span class="math"><i>k</i></span>?`,
+        choices: [`&minus;2`, `&minus;1`, `2`, `3`],
+        correctIndex: 0,
+        hint: `Look at the second point (0, &minus;3): since x = 0, plugging in (0, &minus;3) wipes out 'a' in one step!`,
+        trapFeedback: {
+          1: `Check division: &minus;3k = 6 &rArr; k = 6 / (&minus;3) = &minus;2.`,
+          2: `Watch the negative sign! k(&minus;3) = 6 gives k = &minus;2, not +2.`,
+          3: `Notice a = 3 if you solve for a, not k! Always double-check which constant the question asks for.`
+        },
+        solution: `<strong>Smart Substitution:</strong> Substitute <span class="math">(0, &minus;3)</span> first because <span class="math"><i>x</i> = 0</span> eliminates <span class="math"><i>a</i></span> immediately!<br>
+                   <div class="math-block math"><i>a</i>(0) + <i>k</i>(&minus;3) = 6 &rArr; &minus;3<i>k</i> = 6 &rArr; <strong><i>k</i> = &minus;2</strong> &rArr; <strong>(A)</strong></div>`
+      },
+      {
+        num: 7,
+        type: 'mc',
+        prompt: `The equation <span class="math">3(2<i>x</i> &minus; 5) + 4<i>x</i> = <i>kx</i> &minus; 15</span> has infinitely many solutions, where <span class="math"><i>k</i></span> is a constant. What is the value of <span class="math"><i>k</i></span>?`,
+        choices: [`6`, `8`, `10`, `12`],
+        correctIndex: 2,
+        hint: `Expand 3(2x - 5) and combine ALL x-terms on the left side before matching with kx!`,
+        trapFeedback: {
+          0: `6x is only from 3(2x &minus; 5) — don't forget to add the + 4x right next to it!`,
+          1: `Check multiplication: 3(2x) + 4x = 6x + 4x = 10x.`,
+          3: `Check multiplication: 3(2x) = 6x, plus 4x gives 10x.`
+        },
+        solution: `<strong>Expand and combine like terms first:</strong><br>
+                   <div class="math-block math">6<i>x</i> &minus; 15 + 4<i>x</i> = <i>kx</i> &minus; 15 &rArr; 10<i>x</i> &minus; 15 = <i>kx</i> &minus; 15</div>
+                   Constants already match (<span class="math">&minus;15 = &minus;15</span>). Match <span class="math"><i>x</i></span>-coefficients: <span class="math"><strong><i>k</i> = 10</strong></span> &rArr; <strong>(C)</strong>.`
+      },
+      {
+        num: 8,
+        type: 'mc',
+        prompt: `<div class="math-block math"><i>x</i>(<i>r</i> &minus; 9) + 4 = 19<i>x</i> + 27</div>In the given equation, <span class="math"><i>r</i></span> is a positive integer. If the given equation has <strong>exactly one solution</strong>, which of the following CANNOT be the value of <span class="math"><i>r</i></span>?`,
+        choices: [`4`, `9`, `23`, `28`],
+        correctIndex: 3,
+        hint: `A linear equation ax + b = cx + d has ONE solution whenever the x-coefficients are NOT equal (a ≠ c). What value of r makes (r - 9) equal to 19?`,
+        trapFeedback: {
+          0: `If r = 4, we get &minus;5x + 4 = 19x + 27, which still has one solution!`,
+          1: `Trap! Even if r = 9, we get 0x + 4 = 19x + 27 &rArr; 19x = &minus;23, which STILL has one solution!`,
+          2: `Check arithmetic: r &minus; 9 = 19 means r = 19 + 9 = 28.`
+        },
+        solution: `For <strong>exactly one solution</strong>, the <span class="math"><i>x</i></span>-coefficients must NOT be equal (<span class="math"><i>a</i> &ne; <i>c</i></span>):<br>
+                   <div class="math-block math"><i>r</i> &minus; 9 &ne; 19 &rArr; <i>r</i> &ne; 28</div>
+                   If <span class="math"><i>r</i> = 28</span>, we get <span class="math">19<i>x</i> + 4 = 19<i>x</i> + 27</span> (no solution). Thus <span class="math"><i>r</i></span> CANNOT be <strong>28</strong> &rArr; <strong>(D)</strong>.`
+      },
+      {
+        num: 9,
+        type: 'mc',
+        prompt: `In the given equation, <span class="math"><i>k</i></span> is a constant. If the equation has no solution, what is the value of <span class="math"><i>k</i></span>?<div class="math-block math">4(<i>x</i> + 3) &minus; <i>x</i> = <i>kx</i> + 5 &minus; 2<i>x</i></div>`,
+        choices: [`1`, `3`, `5`, `6`],
+        correctIndex: 2,
+        hint: `Combine ALL x-terms on BOTH sides first! Left side has 4x - x; right side has kx - 2x = (k - 2)x.`,
+        trapFeedback: {
+          0: `Looks like 2 was subtracted instead of added: 3 = k &minus; 2 gives k = 5.`,
+          1: `700+ Trap! Left side has 3x, so you picked k = 3 — forgetting the &minus;2x on the right side! Right side is (k &minus; 2)x.`,
+          3: `Don't forget to subtract x on the left side: 4x &minus; x = 3x (not 4x).`
+        },
+        solution: `<strong>Combine all <i>x</i>-terms on both sides first:</strong><br>
+                   <div class="math-block math">4<i>x</i> + 12 &minus; <i>x</i> = (<i>k</i> &minus; 2)<i>x</i> + 5 &rArr; 3<i>x</i> + 12 = (<i>k</i> &minus; 2)<i>x</i> + 5</div>
+                   Constants differ (<span class="math">12 &ne; 5</span>). Set <span class="math"><i>x</i></span>-coefficients equal: <span class="math">3 = <i>k</i> &minus; 2 &rArr; <strong><i>k</i> = 5</strong></span> &rArr; <strong>(C)</strong>.`
+      },
+      {
+        num: 10,
+        type: 'mc',
+        tableHTML: `<table class="sat-table"><caption>Line <i>h</i></caption><thead><tr><th scope="col"><i>x</i></th><th scope="col"><i>y</i></th></tr></thead><tbody><tr><td>18</td><td>130</td></tr><tr><td>23</td><td>160</td></tr><tr><td>26</td><td>178</td></tr></tbody></table>`,
+        prompt: `For line <span class="math"><i>h</i></span>, the table shows three values of <span class="math"><i>x</i></span> and their corresponding values of <span class="math"><i>y</i></span>. Line <span class="math"><i>k</i></span> is the result of translating line <span class="math"><i>h</i></span> down 5 units in the <span class="math"><i>xy</i></span>-plane. What is the <span class="math"><i>x</i></span>-intercept of line <span class="math"><i>k</i></span>?`,
+        choices: [
+          `<span class="math">(&minus;${frac('26','3')}, 0)</span>`,
+          `<span class="math">(&minus;${frac('9','2')}, 0)</span>`,
+          `<span class="math">(&minus;${frac('11','3')}, 0)</span>`,
+          `<span class="math">(&minus;${frac('17','6')}, 0)</span>`
+        ],
+        correctIndex: 3,
+        hint: `1) Find line h: m = (160 - 130)/(23 - 18) = 6, so y = 6x + 22.  2) Shift down 5 units: subtract 5 from y.  3) Set y = 0 to find the x-intercept!`,
+        trapFeedback: {
+          0: `Check b for line h: 130 = 6(18) + b &rArr; 130 = 108 + b &rArr; b = 22 (not 57).`,
+          1: `If you added 5 instead of subtracting 5: 22 + 5 = 27 &rArr; &minus;27/6 = &minus;9/2. "Down 5" subtracts 5!`,
+          2: `(&minus;11/3, 0) = (&minus;22/6, 0) is the x-intercept of line h BEFORE translating down 5 units!`
+        },
+        solution: `<strong>1. Equation of line <i>h</i>:</strong> <span class="math"><i>m</i> = ${frac('160 &minus; 130','23 &minus; 18')} = ${frac('30','5')} = 6</span>, and <span class="math">130 = 6(18) + <i>b</i> &rArr; <i>b</i> = 22</span>, so <span class="math"><i>y</i> = 6<i>x</i> + 22</span>.<br>
+                   <strong>2. Translate down 5 for line <i>k</i>:</strong> <span class="math"><i>y</i> = 6<i>x</i> + 22 &minus; 5 = 6<i>x</i> + 17</span>.<br>
+                   <strong>3. Find <i>x</i>-intercept (set <i>y</i> = 0):</strong> <span class="math">6<i>x</i> + 17 = 0 &rArr; <i>x</i> = &minus;${frac('17','6')} &rArr; <strong>(&minus;${frac('17','6')}, 0)</strong></span> &rArr; <strong>(D)</strong>.`
+      },
+      {
+        num: 11,
+        type: 'grid',
+        prompt: `The line <span class="math">5<i>x</i> + 2<i>y</i> = 30</span> intersects the <span class="math"><i>y</i></span>-axis at the point <span class="math">(0, <i>y</i><sub>0</sub>)</span>. What is the value of <span class="math"><i>y</i><sub>0</sub></span>?`,
+        expectedValue: 15,
+        displayAnswer: `15`,
+        hint: `Cover-Up Shortcut: At the y-axis, x = 0! Cover up 5x and solve 2y = 30.`,
+        solution: `Substitute <span class="math"><i>x</i> = 0</span> into <span class="math">5<i>x</i> + 2<i>y</i> = 30</span>:<br>
+                   <div class="math-block math">5(0) + 2<i>y</i><sub>0</sub> = 30 &rArr; 2<i>y</i><sub>0</sub> = 30 &rArr; <strong><i>y</i><sub>0</sub> = 15</strong></div>`
+      },
+      {
+        num: 12,
+        type: 'grid',
+        prompt: `If <span class="math">${frac('3','4')}(<i>x</i> &minus; 8) = 12</span>, what is the value of <span class="math">2<i>x</i> + 5</span>?`,
+        expectedValue: 53,
+        displayAnswer: `53`,
+        hint: `Multiply both sides by 4/3 first to get x - 8 = 16. Once you find x, don't forget to plug it into 2x + 5!`,
+        solution: `<strong>1. Solve for <i>x</i>:</strong> Multiply both sides by <span class="math">${frac('4','3')}</span>: <span class="math"><i>x</i> &minus; 8 = 12 &middot; ${frac('4','3')} = 16 &rArr; <i>x</i> = 24</span>.<br>
+                   <strong>2. Evaluate target expression:</strong> <span class="math">2(24) + 5 = 48 + 5 = <strong>53</strong></span>.`
+      },
+      {
+        num: 13,
+        type: 'grid',
+        prompt: `Line <span class="math"><i>m</i></span> is defined by <span class="math"><i>y</i> = <i>cx</i> + 9</span>. Line <span class="math"><i>n</i></span> is perpendicular to line <span class="math"><i>m</i></span> and passes through the points <span class="math">(1, 4)</span> and <span class="math">(4, 13)</span>. What is the value of <span class="math"><i>c</i></span>?`,
+        expectedValue: -1/3,
+        displayAnswer: `-1/3 (or -.333)`,
+        hint: `Find the slope of line n through (1, 4) and (4, 13) first. Since line m is perpendicular to line n, c is the negative reciprocal!`,
+        solution: `<strong>1. Slope of line <i>n</i>:</strong> <span class="math"><i>m<sub>n</sub></i> = ${frac('13 &minus; 4','4 &minus; 1')} = ${frac('9','3')} = 3</span>.<br>
+                   <strong>2. Perpendicular slope <i>c</i>:</strong> Negative reciprocal of <span class="math">3</span> is <span class="math"><strong><i>c</i> = &minus;${frac('1','3')}</strong></span>.`
+      },
+      {
+        num: 14,
+        type: 'grid',
+        tableHTML: `<table class="sat-table"><caption>Points on Line</caption><thead><tr><th scope="col"><i>x</i></th><th scope="col"><i>y</i></th></tr></thead><tbody><tr><td><i>k</i></td><td>13</td></tr><tr><td><i>k</i> + 7</td><td>&minus;15</td></tr></tbody></table>`,
+        prompt: `The table gives the coordinates of two points on a line in the <span class="math"><i>xy</i></span>-plane. The <span class="math"><i>y</i></span>-intercept of the line is <span class="math">(<i>k</i> &minus; 5, <i>b</i>)</span>, where <span class="math"><i>k</i></span> and <span class="math"><i>b</i></span> are constants. What is the value of <span class="math"><i>b</i></span>?`,
+        expectedValue: 33,
+        displayAnswer: `33`,
+        hint: `1) Calculate slope: (k + 7) - k = 7, so k cancels out!  2) Every y-intercept has x-coordinate 0, so k - 5 = 0 (meaning k = 5)!`,
+        solution: `<strong>1. Slope (<i>k</i> cancels out!):</strong> <span class="math"><i>m</i> = ${frac('&minus;15 &minus; 13','(<i>k</i> + 7) &minus; <i>k</i>')} = ${frac('&minus;28','7')} = &minus;4</span>.<br>
+                   <strong>2. Use <i>y</i>-intercept definition:</strong> Every <span class="math"><i>y</i></span>-intercept has <span class="math"><i>x</i> = 0</span>, so <span class="math"><i>k</i> &minus; 5 = 0 &rArr; <i>k</i> = 5</span>, giving point <span class="math">(5, 13)</span>.<br>
+                   Stepping <span class="math">&Delta;<i>x</i> = &minus;5</span> from <span class="math"><i>x</i> = 5</span> to <span class="math"><i>x</i> = 0</span> changes <span class="math"><i>y</i></span> by <span class="math">(&minus;4)(&minus;5) = +20 &rArr; <i>b</i> = 13 + 20 = <strong>33</strong></span>.`
+      },
+      {
+        num: 15,
+        type: 'grid',
+        svgGraph: true,
+        prompt: `The graph shows a line <span class="math"><i>k</i></span>. Line <span class="math"><i>j</i></span> is perpendicular to line <span class="math"><i>k</i></span>. What is the slope of line <span class="math"><i>j</i></span>?`,
+        expectedValue: 1.2,
+        displayAnswer: `6/5 or 1.2`,
+        hint: `Read the two red intercept points directly off the grid: (-6, 0) and (0, -5). Find the slope of line k, then flip & negate!`,
+        solution: `<strong>1. Read intercepts of line <i>k</i>:</strong> <span class="math">(&minus;6, 0)</span> and <span class="math">(0, &minus;5)</span>.<br>
+                   <strong>2. Slope of line <i>k</i>:</strong> <span class="math"><i>m<sub>k</sub></i> = ${frac('&minus;5 &minus; 0','0 &minus; (&minus;6)')} = &minus;${frac('5','6')}</span>.<br>
+                   <strong>3. Perpendicular slope (<i>j</i> &perp; <i>k</i>):</strong> <span class="math"><strong><i>m<sub>j</sub></i> = ${frac('6','5')}</strong></span> (or <strong>1.2</strong>).`
+      }
+    ];
+
+    // =========================================================================
+    // State Management
+    // =========================================================================
+    const state = {
+      currentSlide: 0,
+      // Practice answers: { [problemNum]: { selected?: number, eliminated: Set<number>, submittedValue?: string, isCorrect?: boolean, checked: boolean, showHint: boolean, showSol: boolean } }
+      practice: {},
+      // Worked examples step progress: { 1: 0, 2: 0, 3: 0 }
+      workedSteps: { 1: 0, 2: 0, 3: 0 },
+      // Interactive Explorers
+      slopeLab: { m: 0.5, b: 1 },
+      stdLab: { A: 3, B: 2, C: 6, swapped: false, mask: 'none' },
+      relLab: { m: 0.8, b: 1, k: -3, showPar: true, showPerp: true, showShift: false },
+      solLab: { a: 2, b: 1, c: -1, d: 4 },
+      desmosTab: 1,
+      desmosSlider: { a: 1, k: 1 },
+      // Timer
+      timerSec: 75,
+      timerRunning: false,
+      timerId: null
+    };
+
+    PRACTICE_PROBLEMS.forEach((p) => {
+      state.practice[p.num] = {
+        selected: null,
+        eliminated: new Set(),
+        submittedValue: '',
+        isCorrect: false,
+        checked: false,
+        showHint: false,
+        showSol: false
+      };
+    });
+
+    // =========================================================================
+    // Slide Definitions (27 Slides Total)
+    // =========================================================================
+    const SLIDES = [
+      { id: 'intro', section: 'Intro', title: 'Welcome & Session Overview' },
+      { id: 'roadmap', section: 'Intro', title: 'Session 1 Roadmap', subtitle: 'Phase 1: Algebra Foundation' },
+      { id: 'sec1-lab', section: '1. Forms & Slope', title: 'Interactive Slope & Intercept Lab', subtitle: 'Section 1: Visualizing y = mx + b' },
+      { id: 'sec1-forms', section: '1. Forms & Slope', title: 'Standard Form & Cover-Up Lab', subtitle: 'Section 1: Slope-Intercept, Point-Slope & Ax + By = C' },
+      { id: 'sec1-hv', section: '1. Forms & Slope', title: 'Horizontal vs. Vertical Lines', subtitle: 'Section 1: Special Zero & Undefined Slopes' },
+      { id: 'sec2-rel', section: '2. Parallel & Perp', title: 'Parallel, Perpendicular & Translated Lines', subtitle: 'Section 2: Interactive Graph Visualizer' },
+      { id: 'sec3-sol', section: '3. Solutions', title: 'Number of Solutions Explorer (ax + b = cx + d)', subtitle: 'Section 3: One, Zero & Infinite Solutions' },
+      { id: 'sec4-desmos', section: '4. Desmos Hacks', title: 'Digital SAT Desmos Speed Tactics', subtitle: 'Section 4: Regression (~) & Constant Sliders' },
+      { id: 'worked-1', section: '5. Worked Examples', title: 'Worked Example 1: Standard Form Perpendicular Slope', subtitle: 'Section 5: Guided Walkthrough' },
+      { id: 'worked-2', section: '5. Worked Examples', title: 'Worked Example 2: No Solution Condition', subtitle: 'Section 5: Guided Walkthrough' },
+      { id: 'worked-3', section: '5. Worked Examples', title: 'Worked Example 3: Infinitely Many Solutions', subtitle: 'Section 5: Guided Walkthrough' },
+      ...PRACTICE_PROBLEMS.map((p) => ({
+        id: `prob-${p.num}`,
+        section: '6. Practice (1–15)',
+        title: `Practice Problem ${p.num}`,
+        subtitle: p.type === 'mc' ? 'Multiple Choice (Bluebook Style)' : 'Student-Produced Response (Grid-In)',
+        probNum: p.num
+      })),
+      { id: 'summary', section: 'Scoreboard', title: 'Session 1 Scoreboard & Complete Answer Key', subtitle: 'Review & Wrap-Up' }
+    ];
+
+    // =========================================================================
+    // Coordinate SVG Generator Utility
+    // =========================================================================
+    function createCoordSVG({ xMin = -6, xMax = 6, yMin = -6, yMax = 6, width = 360, height = 360, label = 'Coordinate plane graph', drawFn }) {
+      const pad = 26;
+      const plotW = width - pad * 2;
+      const plotH = height - pad * 2;
+      const toX = (x) => pad + ((x - xMin) / (xMax - xMin)) * plotW;
+      const toY = (y) => pad + ((yMax - y) / (yMax - yMin)) * plotH;
+
+      let gridLines = '';
+      const xStep = (xMax - xMin) > 14 ? 2 : 1;
+      const yStep = (yMax - yMin) > 14 ? 2 : 1;
+
+      for (let x = Math.ceil(xMin); x <= Math.floor(xMax); x += 1) {
+        const px = toX(x);
+        gridLines += `<line x1="${px}" y1="${pad}" x2="${px}" y2="${height - pad}" stroke="#e2e8f0" stroke-width="1"/>`;
+        if (x !== 0 && x % (xStep * 2) === 0) {
+          gridLines += `<text x="${px}" y="${toY(0) + 14}" font-size="10" fill="#64748b" text-anchor="middle">${x}</text>`;
+        }
+      }
+      for (let y = Math.ceil(yMin); y <= Math.floor(yMax); y += 1) {
+        const py = toY(y);
+        gridLines += `<line x1="${pad}" y1="${py}" x2="${width - pad}" y2="${py}" stroke="#e2e8f0" stroke-width="1"/>`;
+        if (y !== 0 && y % (yStep * 2) === 0) {
+          gridLines += `<text x="${toX(0) - 6}" y="${py + 3}" font-size="10" fill="#64748b" text-anchor="end">${y}</text>`;
+        }
+      }
+
+      const axes = `
+        <line x1="${pad}" y1="${toY(0)}" x2="${width - pad}" y2="${toY(0)}" stroke="#334155" stroke-width="2"/>
+        <line x1="${toX(0)}" y1="${pad}" x2="${toX(0)}" y2="${height - pad}" stroke="#334155" stroke-width="2"/>
+        <text x="${width - pad + 8}" y="${toY(0) + 4}" font-size="12" font-style="italic" font-weight="700" fill="#1e293b">x</text>
+        <text x="${toX(0)}" y="${pad - 8}" font-size="12" font-style="italic" font-weight="700" fill="#1e293b" text-anchor="middle">y</text>
+      `;
+
+      // Helper to clip line y = m*x + b to viewport box
+      const clipLine = (m, b, color = '#1e5ab4', strokeWidth = 3, dash = '') => {
+        const pts = [];
+        const yAtLeft = m * xMin + b;
+        if (yAtLeft >= yMin && yAtLeft <= yMax) pts.push([xMin, yAtLeft]);
+        const yAtRight = m * xMax + b;
+        if (yAtRight >= yMin && yAtRight <= yMax) pts.push([xMax, yAtRight]);
+        if (Math.abs(m) > 1e-9) {
+          const xAtBot = (yMin - b) / m;
+          if (xAtBot > xMin && xAtBot < xMax) pts.push([xAtBot, yMin]);
+          const xAtTop = (yMax - b) / m;
+          if (xAtTop > xMin && xAtTop < xMax) pts.push([xAtTop, yMax]);
+        }
+        if (pts.length < 2) return '';
+        return `<line x1="${toX(pts[0][0])}" y1="${toY(pts[0][1])}" x2="${toX(pts[1][0])}" y2="${toY(pts[1][1])}" stroke="${color}" stroke-width="${strokeWidth}" ${dash ? `stroke-dasharray="${dash}"` : ''} stroke-linecap="round"/>`;
+      };
+
+      const customContent = drawFn ? drawFn({ toX, toY, clipLine, pad, width, height }) : '';
+
+      return `<svg role="img" aria-label="${label}" viewBox="0 0 ${width} ${height}">
+        ${gridLines}
+        ${axes}
+        ${customContent}
+      </svg>`;
+    }
+
+    // =========================================================================
+    // Renderers for Each Slide Type
+    // =========================================================================
+    function renderSlideContent(slide) {
+      if (slide.id === 'intro') {
+        return `
+          <div class="hero-slide">
+            <div class="hero-kicker">Digital SAT Math Prep &bull; Phase 1: Algebra Foundation</div>
+            <h1 id="slide-heading" tabindex="-1">Session 1: Linear Equations in One and Two Variables</h1>
+            <p style="font-size:1.08rem;color:#dbeafe;max-width:58ch;margin:0 0 1rem 0;">
+              Interactive 700+ target lesson featuring live draggable coordinate labs, Desmos regression &amp; slider simulators, step-by-step worked examples, and 15 Bluebook-style practice drills.
+            </p>
+            <div class="hero-tags">
+              <span class="hero-tag">Slope &amp; Intercepts</span>
+              <span class="hero-tag">Cover-Up Standard Form</span>
+              <span class="hero-tag">Parallel &amp; Perpendicular</span>
+              <span class="hero-tag">One / Zero / Infinite Solutions</span>
+              <span class="hero-tag">15 Interactive Drills</span>
+            </div>
+            <button type="button" class="hero-start-btn" id="hero-begin-btn">Start Session 1 &rarr;</button>
+          </div>
+        `;
+      }
+
+      let bodyHTML = '';
+
+      if (slide.id === 'roadmap') {
+        bodyHTML = `
+          <div class="two-col-even">
+            <div class="box">
+              <h2 class="box-title">Core Concepts &amp; Interactive Labs</h2>
+              <div class="box-content">
+                <ol style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:0.65rem;">
+                  <li><strong>Linear Forms, Slope &amp; Intercepts</strong><br><span style="font-size:0.86rem;color:var(--sat-muted);">Live Rise/Run explorer + Standard Form Cover-Up mask</span></li>
+                  <li><strong>Parallel, Perpendicular &amp; Translated Lines</strong><br><span style="font-size:0.86rem;color:var(--sat-muted);">Negative reciprocals &amp; vertical shift visualizer</span></li>
+                  <li><strong>Single-Variable Solution Conditions</strong><br><span style="font-size:0.86rem;color:var(--sat-muted);">Interactive <span class="math"><i>ax</i> + <i>b</i> = <i>cx</i> + <i>d</i></span> graph &amp; algebra matcher</span></li>
+                  <li><strong>Digital SAT Desmos Speed Tactics</strong><br><span style="font-size:0.86rem;color:var(--sat-muted);">Table regression (<span class="math"><i>y</i><sub>1</sub> ~ <i>mx</i><sub>1</sub> + <i>b</i></span>) &amp; constant sliders</span></li>
+                </ol>
+              </div>
+            </div>
+            <div class="box desmos">
+              <h2 class="box-title">Guided &amp; Bluebook-Style Practice</h2>
+              <div class="box-content" style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div>
+                  <strong>3 Step-by-Step Worked Examples</strong>
+                  <ul style="margin:0.3rem 0 0;padding-left:1.2rem;font-size:0.9rem;">
+                    <li>Standard Form perpendicular slope</li>
+                    <li>No-solution parameter equations</li>
+                    <li>Infinite-solutions multi-constant equations</li>
+                  </ul>
+                </div>
+                <div>
+                  <strong>15 Interactive Practice Problems</strong>
+                  <ul style="margin:0.3rem 0 0;padding-left:1.2rem;font-size:0.9rem;">
+                    <li><strong>Problems 1–10:</strong> Clickable Multiple Choice with answer eliminator, trap diagnostics &amp; hints</li>
+                    <li><strong>Problems 11–15:</strong> Live Grid-In fraction/decimal checker</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec1-lab') {
+        bodyHTML = `
+          <div class="two-col">
+            <div class="graph-card">
+              <div id="slope-lab-svg-wrap" style="width:100%;display:flex;justify-content:center;"></div>
+              <div id="slope-lab-readout" class="math-block math" style="width:100%;margin-top:0.4rem;"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.8rem;">
+              <div class="box">
+                <h2 class="box-title">Drag Sliders to Explore y = mx + b</h2>
+                <div class="box-content">
+                  <div class="control-group">
+                    <label class="control-label" for="slider-m">
+                      <span>Slope (<span class="math"><i>m</i> = Rise / Run</span>)</span>
+                      <span id="val-m">${state.slopeLab.m}</span>
+                    </label>
+                    <input type="range" id="slider-m" min="-3" max="3" step="0.5" value="${state.slopeLab.m}">
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="slider-b">
+                      <span>y-Intercept (<span class="math"><i>b</i></span>)</span>
+                      <span id="val-b">${state.slopeLab.b}</span>
+                    </label>
+                    <input type="range" id="slider-b" min="-4" max="4" step="1" value="${state.slopeLab.b}">
+                  </div>
+                  <div class="pill-row">
+                    <button type="button" class="action-btn secondary slope-preset" data-m="0.5" data-b="1">Default (m = 0.5)</button>
+                    <button type="button" class="action-btn secondary slope-preset" data-m="0" data-b="2">Horizontal (m = 0)</button>
+                    <button type="button" class="action-btn secondary slope-preset" data-m="-2" data-b="3">Negative (m = &minus;2)</button>
+                  </div>
+                </div>
+              </div>
+              <div class="box desmos">
+                <h2 class="box-title">Key Formulas</h2>
+                <div class="box-content">
+                  <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.4rem;">
+                    <li><strong>Slope:</strong> <span class="math"><i>m</i> = ${frac('Rise','Run')} = ${frac('<i>y</i><sub>2</sub> &minus; <i>y</i><sub>1</sub>','<i>x</i><sub>2</sub> &minus; <i>x</i><sub>1</sub>')}</span></li>
+                    <li><strong>y-intercept:</strong> Value of <span class="math"><i>y</i></span> when <span class="math"><i>x</i> = 0</span>, at <span class="math">(0, <i>b</i>)</span>.</li>
+                    <li><strong>Point-Slope Form:</strong> <span class="math"><i>y</i> &minus; <i>y</i><sub>1</sub> = <i>m</i>(<i>x</i> &minus; <i>x</i><sub>1</sub>)</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec1-forms') {
+        const { A, B, C, swapped, mask } = state.stdLab;
+        const xTerm = `<span class="cover-term ${mask === 'x' ? 'masked' : ''}">${A}<i>x</i></span>`;
+        const yTerm = `<span class="cover-term ${mask === 'y' ? 'masked' : ''}">${B >= 0 ? '+ ' + B : '&minus; ' + Math.abs(B)}<i>y</i></span>`;
+        const firstTerm = swapped ? `<span class="cover-term ${mask === 'y' ? 'masked' : ''}">${B}<i>y</i></span>` : xTerm;
+        const secondTerm = swapped ? `<span class="cover-term ${mask === 'x' ? 'masked' : ''}">${A >= 0 ? '+ ' + A : '&minus; ' + Math.abs(A)}<i>x</i></span>` : yTerm;
+
+        bodyHTML = `
+          <div class="two-col">
+            <div style="display:flex;flex-direction:column;gap:0.8rem;">
+              <div class="box">
+                <h2 class="box-title">Interactive Standard Form "Cover-Up" Lab</h2>
+                <div class="box-content">
+                  <div class="cover-eq math" id="cover-eq-box">
+                    ${firstTerm} ${secondTerm} <span>= ${C}</span>
+                  </div>
+                  <div class="pill-row" style="justify-content:center;margin-bottom:0.65rem;">
+                    <button type="button" class="action-btn secondary std-mask-btn" data-mask="none" aria-pressed="${mask === 'none'}">Show Full Equation</button>
+                    <button type="button" class="action-btn secondary std-mask-btn" data-mask="x" aria-pressed="${mask === 'x'}">Cover Up x (x = 0)</button>
+                    <button type="button" class="action-btn secondary std-mask-btn" data-mask="y" aria-pressed="${mask === 'y'}">Cover Up y (y = 0)</button>
+                    <button type="button" class="action-btn amber" id="std-swap-btn" aria-pressed="${swapped}">Swap Order Trap (By + Ax)</button>
+                  </div>
+                  <div class="two-col-even" style="gap:0.6rem;">
+                    <div>
+                      <label class="control-label" for="std-a"><span>x-coeff (A):</span><span id="std-a-val">${A}</span></label>
+                      <input type="range" id="std-a" min="-6" max="6" step="1" value="${A}">
+                    </div>
+                    <div>
+                      <label class="control-label" for="std-b"><span>y-coeff (B):</span><span id="std-b-val">${B}</span></label>
+                      <input type="range" id="std-b" min="-6" max="6" step="1" value="${B}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="box problem">
+                <h2 class="box-title">700+ Instant Shortcut &amp; Trap Alert</h2>
+                <div class="box-content" id="std-summary-readout"></div>
+              </div>
+            </div>
+            <div class="graph-card">
+              <div id="std-lab-svg-wrap" style="width:100%;display:flex;justify-content:center;"></div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec1-hv') {
+        const hSVG = createCoordSVG({
+          xMin: -4, xMax: 4, yMin: -3, yMax: 4, width: 300, height: 220,
+          label: 'Horizontal line y = 2 with slope 0',
+          drawFn: ({ toX, toY, clipLine }) => `
+            ${clipLine(0, 2, '#1e5ab4', 3.5)}
+            <circle cx="${toX(1.5)}" cy="${toY(2)}" r="5" fill="#142355"/>
+            <text x="${toX(1.5)}" y="${toY(2) - 10}" font-size="12" font-weight="700" fill="#142355" text-anchor="middle">(a, b) = (1.5, 2)</text>
+          `
+        });
+        const vSVG = createCoordSVG({
+          xMin: -4, xMax: 4, yMin: -3, yMax: 4, width: 300, height: 220,
+          label: 'Vertical line x = 2 with undefined slope',
+          drawFn: ({ toX, toY, pad, height }) => `
+            <line x1="${toX(2)}" y1="${pad}" x2="${toX(2)}" y2="${height - pad}" stroke="#b41e1e" stroke-width="3.5"/>
+            <circle cx="${toX(2)}" cy="${toY(1.5)}" r="5" fill="#142355"/>
+            <text x="${toX(2) + 8}" y="${toY(1.5) + 4}" font-size="12" font-weight="700" fill="#142355">(2, 1.5)</text>
+          `
+        });
+        bodyHTML = `
+          <div class="two-col-even">
+            <div class="box">
+              <h2 class="box-title">Horizontal Line: y = b</h2>
+              <div class="box-content" style="text-align:center;">
+                ${hSVG}
+                <p style="margin:0.5rem 0 0;text-align:left;">
+                  &bull; Every point has the same <i>y</i>-coordinate.<br>
+                  &bull; <span class="math">Rise = 0 &rArr; <strong>Slope <i>m</i> = 0</strong></span>.
+                </p>
+              </div>
+            </div>
+            <div class="box problem">
+              <h2 class="box-title">Vertical Line: x = a</h2>
+              <div class="box-content" style="text-align:center;">
+                ${vSVG}
+                <p style="margin:0.5rem 0 0;text-align:left;">
+                  &bull; Every point has the same <i>x</i>-coordinate.<br>
+                  &bull; <span class="math">Run = 0 &rArr; <strong>Slope is Undefined</strong></span> (division by 0!).
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec2-rel') {
+        const { m, k, showPar, showPerp, showShift } = state.relLab;
+        bodyHTML = `
+          <div class="two-col">
+            <div class="graph-card">
+              <div id="rel-lab-svg-wrap" style="width:100%;display:flex;justify-content:center;"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div class="box">
+                <h2 class="box-title">Interactive Line Relationships</h2>
+                <div class="box-content">
+                  <div class="control-group">
+                    <label class="control-label" for="rel-m"><span>Base Line Slope (<span class="math"><i>m</i><sub>1</sub></span>):</span><span id="rel-m-val">${m}</span></label>
+                    <input type="range" id="rel-m" min="-2.5" max="2.5" step="0.5" value="${m}">
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="rel-k"><span>Vertical Shift (<span class="math"><i>k</i></span> units):</span><span id="rel-k-val">${k > 0 ? '+' + k : k}</span></label>
+                    <input type="range" id="rel-k" min="-5" max="5" step="1" value="${k}">
+                  </div>
+                  <div class="pill-row">
+                    <button type="button" class="action-btn secondary rel-toggle" data-key="showPar" aria-pressed="${showPar}">Parallel (m&#8322; = m&#8321;)</button>
+                    <button type="button" class="action-btn secondary rel-toggle" data-key="showPerp" aria-pressed="${showPerp}">Perpendicular (&minus;1/m&#8321;)</button>
+                    <button type="button" class="action-btn secondary rel-toggle" data-key="showShift" aria-pressed="${showShift}">Translated (y = mx + b + k)</button>
+                  </div>
+                </div>
+              </div>
+              <div class="box desmos">
+                <h2 class="box-title">Live Equations &amp; Rules</h2>
+                <div class="box-content" id="rel-readout"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec3-sol') {
+        const { a, b, c, d } = state.solLab;
+        bodyHTML = `
+          <div class="two-col">
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div class="box">
+                <h2 class="box-title">Explore Number of Solutions: ax + b = cx + d</h2>
+                <div class="box-content">
+                  <div class="pill-row" style="margin-bottom:0.75rem;">
+                    <button type="button" class="action-btn secondary sol-preset" data-a="2" data-b="1" data-c="-1" data-d="4">1 Solution (a &ne; c)</button>
+                    <button type="button" class="action-btn secondary sol-preset" data-a="2" data-b="3" data-c="2" data-d="-2">No Solution (a = c, b &ne; d)</button>
+                    <button type="button" class="action-btn secondary sol-preset" data-a="-1" data-b="2" data-c="-1" data-d="2">Infinite Solutions (a = c, b = d)</button>
+                  </div>
+                  <div class="two-col-even" style="gap:0.6rem;">
+                    <div>
+                      <label class="control-label" for="sol-a"><span>Left slope (a):</span><span id="sol-a-val">${a}</span></label>
+                      <input type="range" id="sol-a" min="-3" max="3" step="1" value="${a}">
+                      <label class="control-label" for="sol-b"><span>Left const (b):</span><span id="sol-b-val">${b}</span></label>
+                      <input type="range" id="sol-b" min="-4" max="4" step="1" value="${b}">
+                    </div>
+                    <div>
+                      <label class="control-label" for="sol-c"><span>Right slope (c):</span><span id="sol-c-val">${c}</span></label>
+                      <input type="range" id="sol-c" min="-3" max="3" step="1" value="${c}">
+                      <label class="control-label" for="sol-d"><span>Right const (d):</span><span id="sol-d-val">${d}</span></label>
+                      <input type="range" id="sol-d" min="-4" max="4" step="1" value="${d}">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="sol-status-box"></div>
+            </div>
+            <div class="graph-card">
+              <div id="sol-lab-svg-wrap" style="width:100%;display:flex;justify-content:center;"></div>
+              <p style="font-size:0.8rem;color:var(--sat-muted);margin:0.35rem 0 0;">Blue: <span class="math"><i>y</i> = <i>ax</i> + <i>b</i></span> &nbsp;|&nbsp; Red dashed: <span class="math"><i>y</i> = <i>cx</i> + <i>d</i></span></p>
+            </div>
+          </div>
+        `;
+      } else if (slide.id === 'sec4-desmos') {
+        const { a, k } = state.desmosSlider;
+        const hitPoints = (a * -2 + k * -6 === 6) && (a * 0 + k * -3 === 6);
+        bodyHTML = `
+          <div class="two-col-even">
+            <div class="box desmos">
+              <h2 class="box-title">Shortcut 1: Instant Linear Regression (~)</h2>
+              <div class="box-content">
+                <p style="margin-top:0;"><strong>When to use:</strong> Given 2 points or an <span class="math">(<i>x</i>, <i>y</i>)</span> table.</p>
+                <ol style="padding-left:1.2rem;display:flex;flex-direction:column;gap:0.45rem;">
+                  <li>Click <strong>+</strong> &rarr; <strong>Table</strong> and enter coordinates into <span class="math"><i>x</i><sub>1</sub></span> and <span class="math"><i>y</i><sub>1</sub></span>.</li>
+                  <li>On line 2, type: <code style="background:#dbeafe;padding:0.15rem 0.45rem;border-radius:0.3rem;font-weight:700;">y1 ~ mx1 + b</code></li>
+                  <li>Desmos outputs exact <span class="math"><i>m</i></span> and <span class="math"><i>b</i></span> immediately!</li>
+                </ol>
+                <div class="math-block" style="text-align:left;font-size:0.9rem;">
+                  <strong>Live Mini-Calculator:</strong> Enter 2 points:<br>
+                  <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.4rem;align-items:center;">
+                    <label for="reg-x1">P1:</label>
+                    (<input id="reg-x1" type="number" value="2" style="width:52px;" aria-label="Point 1 x">,
+                     <input id="reg-y1" type="number" value="7" style="width:52px;" aria-label="Point 1 y">)
+                    <label for="reg-x2" style="margin-left:0.4rem;">P2:</label>
+                    (<input id="reg-x2" type="number" value="6" style="width:52px;" aria-label="Point 2 x">,
+                     <input id="reg-y2" type="number" value="15" style="width:52px;" aria-label="Point 2 y">)
+                  </div>
+                  <div id="reg-output" style="margin-top:0.45rem;font-weight:700;color:var(--sat-navy);">m = 2, b = 3 &rArr; y = 2x + 3</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="box desmos">
+              <h2 class="box-title">Shortcut 2: Try Constant Sliders Yourself!</h2>
+              <div class="box-content">
+                <p style="margin:0 0 0.4rem 0;"><strong>Challenge:</strong> Drag sliders <span class="math"><i>a</i></span> and <span class="math"><i>k</i></span> so <span class="math"><i>ax</i> + <i>ky</i> = 6</span> passes through both <strong>(&minus;2, &minus;6)</strong> and <strong>(0, &minus;3)</strong>!</p>
+                <div class="two-col-even" style="gap:0.5rem;">
+                  <div>
+                    <label class="control-label" for="des-a"><span>Slider a:</span><span id="des-a-val">${a}</span></label>
+                    <input type="range" id="des-a" min="-4" max="5" step="1" value="${a}">
+                  </div>
+                  <div>
+                    <label class="control-label" for="des-k"><span>Slider k:</span><span id="des-k-val">${k}</span></label>
+                    <input type="range" id="des-k" min="-4" max="4" step="1" value="${k}">
+                  </div>
+                </div>
+                <div id="desmos-slider-svg" style="display:flex;justify-content:center;margin-top:0.3rem;"></div>
+                <div id="desmos-hit-msg" class="feedback-banner ${hitPoints ? 'ok' : ''}" style="margin-top:0.35rem;text-align:center;">
+                  ${hitPoints ? 'Matched both points! a = 3 and k = &minus;2!' : 'Adjust sliders until the blue line hits both red points.'}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (slide.id.startsWith('worked-')) {
+        const idx = Number(slide.id.split('-')[1]);
+        const workedData = {
+          1: {
+            q: `Line <span class="math">&#8467;</span> is defined by <span class="math">6<i>x</i> &minus; 2<i>y</i> = 14</span>. Line <span class="math"><i>k</i></span> is perpendicular to line <span class="math">&#8467;</span>. What is the slope of line <span class="math"><i>k</i></span>?`,
+            steps: [
+              `<strong>Step 1 (Slope of line &#8467;):</strong> Using <span class="math"><i>m</i> = &minus;${frac('<i>A</i>','<i>B</i>')}</span> on <span class="math">6<i>x</i> &minus; 2<i>y</i> = 14</span>: <span class="math"><i>m</i><sub>&#8467;</sub> = &minus;${frac('6','&minus;2')} = 3</span>.`,
+              `<strong>Step 2 (Perpendicular Negative Reciprocal):</strong> Flip and negate <span class="math">3</span> to get <span class="math"><strong><i>m<sub>k</sub></i> = &minus;${frac('1','3')}</strong></span>.`
+            ]
+          },
+          2: {
+            q: `The equation <span class="math"><i>k</i>(2<i>x</i> &minus; 3) = 8<i>x</i> + 15</span> has no solutions, where <span class="math"><i>k</i></span> is a constant. What is the value of <span class="math"><i>k</i></span>?`,
+            steps: [
+              `<strong>Step 1 (Expand Parentheses First):</strong> <span class="math">2<i>kx</i> &minus; 3<i>k</i> = 8<i>x</i> + 15</span>.`,
+              `<strong>Step 2 (Match x-coefficients, a = c):</strong> <span class="math">2<i>k</i> = 8 &rArr; <strong><i>k</i> = 4</strong></span>.`,
+              `<strong>Step 3 (Verify constants differ, b &ne; d):</strong> <span class="math">&minus;3(4) = &minus;12 &ne; 15</span> &check; (Confirms zero solutions).`
+            ]
+          },
+          3: {
+            q: `In the given equation, <span class="math"><i>s</i></span> and <span class="math"><i>r</i></span> are constants, and <span class="math"><i>s</i> &gt; 0</span>. If the equation has infinitely many solutions, what is the value of <span class="math"><i>s</i></span>?<div class="math-block math">${frac('12<i>x</i> + 28','4')} &minus; ${frac('<i>s</i>','13')} = <i>r</i>(<i>x</i> &minus; 8)</div>`,
+            steps: [
+              `<strong>Step 1 (Simplify &amp; Expand):</strong> Divide left fraction by 4 and distribute <span class="math"><i>r</i></span>: <span class="math">3<i>x</i> + 7 &minus; ${frac('<i>s</i>','13')} = <i>rx</i> &minus; 8<i>r</i></span>.`,
+              `<strong>Step 2 (Match x-coefficients):</strong> Comparing <span class="math">3<i>x</i></span> and <span class="math"><i>rx</i></span> gives <span class="math"><i>r</i> = 3</span>.`,
+              `<strong>Step 3 (Match Constant Terms with r = 3):</strong> <span class="math">7 &minus; ${frac('<i>s</i>','13')} = &minus;8(3) = &minus;24 &rArr; ${frac('<i>s</i>','13')} = 31 &rArr; <strong><i>s</i> = 403</strong></span>.`
+            ]
+          }
+        }[idx];
+
+        const shown = state.workedSteps[idx];
+        const totalSteps = workedData.steps.length;
+
+        bodyHTML = `
+          <div class="box">
+            <h2 class="box-title">Worked Problem ${idx}</h2>
+            <div class="box-content" style="font-size:1.05rem;">${workedData.q}</div>
+          </div>
+          <div class="pill-row">
+            <button type="button" class="action-btn" id="worked-next-step" ${shown >= totalSteps ? 'disabled' : ''}>
+              ${shown < totalSteps ? `Reveal Step ${shown + 1} of ${totalSteps}` : 'All Steps Revealed'}
+            </button>
+            <button type="button" class="action-btn secondary" id="worked-all-steps">Reveal All</button>
+            <button type="button" class="action-btn secondary" id="worked-reset-steps">Hide Steps</button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.55rem;">
+            ${workedData.steps.map((s, i) => `
+              <div class="box solution reveal-panel" ${i < shown ? '' : 'hidden'}>
+                <div class="box-content">${s}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (slide.probNum) {
+        const prob = PRACTICE_PROBLEMS.find((p) => p.num === slide.probNum);
+        const pState = state.practice[prob.num];
+        const letters = ['A', 'B', 'C', 'D'];
+
+        let leftMedia = '';
+        if (prob.tableHTML) {
+          leftMedia = `<div>${prob.tableHTML}</div>`;
+        } else if (prob.svgGraph) {
+          leftMedia = `<div class="graph-card">${createCoordSVG({
+            xMin: -10, xMax: 2, yMin: -10, yMax: 2, width: 300, height: 300,
+            label: 'Line k passing through (-6, 0) and (0, -5)',
+            drawFn: ({ toX, toY, clipLine }) => `
+              ${clipLine(-5/6, -5, '#142355', 3)}
+              <circle cx="${toX(-6)}" cy="${toY(0)}" r="5" fill="#b41e1e"/>
+              <circle cx="${toX(0)}" cy="${toY(-5)}" r="5" fill="#b41e1e"/>
+            `
+          })}</div>`;
+        }
+
+        let interactionHTML = '';
+        if (prob.type === 'mc') {
+          interactionHTML = `
+            <div class="mc-grid" role="group" aria-label="Answer choices for Problem ${prob.num}">
+              ${prob.choices.map((c, idx) => {
+                const isElim = pState.eliminated.has(idx);
+                let statusClass = '';
+                if (pState.checked) {
+                  if (idx === prob.correctIndex) statusClass = 'correct';
+                  else if (pState.selected === idx) statusClass = 'wrong';
+                } else if (pState.selected === idx) {
+                  statusClass = 'selected';
+                }
+                return `
+                  <div class="mc-row ${isElim ? 'eliminated' : ''}">
+                    <button type="button" class="mc-choice ${statusClass}" data-choice="${idx}" aria-pressed="${pState.selected === idx}">
+                      <span class="mc-letter">${letters[idx]}</span>
+                      <span>${c}</span>
+                    </button>
+                    <button type="button" class="elim-btn" data-elim="${idx}" aria-pressed="${isElim}" aria-label="Eliminate choice ${letters[idx]}">&times;</button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        } else {
+          interactionHTML = `
+            <form class="gridin-form" id="gridin-form" novalidate>
+              <div class="gridin-field">
+                <label for="gridin-input-${prob.num}">Student-Produced Response:</label>
+                <span id="gridin-desc-${prob.num}" class="gridin-hint">Enter integer, fraction (e.g. -1/3), or decimal</span>
+                <input
+                  id="gridin-input-${prob.num}"
+                  name="answer"
+                  type="text"
+                  class="gridin-input"
+                  value="${pState.submittedValue}"
+                  aria-describedby="gridin-desc-${prob.num}"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  required
+                >
+              </div>
+              <button type="submit" class="action-btn">Check Answer</button>
+            </form>
+          `;
+        }
+
+        let feedbackHTML = '';
+        if (pState.checked) {
+          if (pState.isCorrect) {
+            feedbackHTML = `<div class="feedback-banner ok">&check; Correct! Awesome work (${prob.type === 'mc' ? 'Choice ' + letters[prob.correctIndex] : prob.displayAnswer}).</div>`;
+          } else {
+            const specificTrap = (prob.type === 'mc' && prob.trapFeedback?.[pState.selected])
+              ? prob.trapFeedback[pState.selected]
+              : `Not quite! Try using the Hint below or check your signs.`;
+            feedbackHTML = `<div class="feedback-banner err">&times; ${specificTrap}</div>`;
+          }
+        }
+
+        const problemCard = `
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div class="box problem">
+              <h2 class="box-title">
+                <span>Problem ${prob.num} of 15</span>
+                <span style="font-weight:500;font-size:0.8rem;">${prob.type === 'mc' ? 'Click option to check &bull; [×] to cross out' : 'Grid-In Response'}</span>
+              </h2>
+              <div class="box-content">
+                <div style="font-size:1.02rem;">${prob.prompt}</div>
+                ${interactionHTML}
+              </div>
+            </div>
+            ${feedbackHTML}
+            <div class="pill-row">
+              <button type="button" class="action-btn amber" id="toggle-hint-btn" aria-expanded="${pState.showHint}">
+                ${pState.showHint ? 'Hide Hint' : 'Show Hint'}
+              </button>
+              <button type="button" class="action-btn green" id="toggle-sol-btn" aria-expanded="${pState.showSol}">
+                ${pState.showSol ? 'Hide Full Solution' : 'Reveal Step-by-Step Solution'}
+              </button>
+              ${pState.checked ? `<button type="button" class="action-btn secondary" id="reset-prob-btn">Reset Question</button>` : ''}
+            </div>
+            <div id="prob-hint-panel" class="box hint reveal-panel" ${pState.showHint ? '' : 'hidden'}>
+              <h3 class="box-title">SAT Strategy Hint</h3>
+              <div class="box-content">${prob.hint}</div>
+            </div>
+            <div id="prob-sol-panel" class="box solution reveal-panel" ${pState.showSol ? '' : 'hidden'}>
+              <h3 class="box-title">Step-by-Step Solution</h3>
+              <div class="box-content">${prob.solution}</div>
+            </div>
+          </div>
+        `;
+
+        bodyHTML = leftMedia
+          ? `<div class="two-col" style="grid-template-columns: minmax(200px, 0.42fr) 1fr;">${leftMedia}${problemCard}</div>`
+          : problemCard;
+      } else if (slide.id === 'summary') {
+        const attempted = Object.values(state.practice).filter((s) => s.checked).length;
+        const correct = Object.values(state.practice).filter((s) => s.isCorrect).length;
+        const letters = ['A', 'B', 'C', 'D'];
+
+        bodyHTML = `
+          <div class="two-col">
+            <div class="box">
+              <h2 class="box-title">Session 1 Drill Performance</h2>
+              <div class="box-content">
+                <p style="font-size:1.2rem;font-weight:700;color:var(--sat-navy);margin:0 0 0.5rem 0;">
+                  Correct: ${correct} / 15 &nbsp; (${attempted} attempted)
+                </p>
+                <p style="font-size:0.88rem;color:var(--sat-muted);margin:0 0 0.75rem 0;">Click any problem badge below to jump directly to that question:</p>
+                <div class="pill-row">
+                  ${PRACTICE_PROBLEMS.map((p) => {
+                    const st = state.practice[p.num];
+                    let bg = '#fff', col = 'var(--sat-navy)', border = 'var(--sat-border)';
+                    if (st.checked && st.isCorrect) { bg = 'var(--sat-green-bg)'; col = 'var(--sat-green)'; border = 'var(--sat-green)'; }
+                    else if (st.checked && !st.isCorrect) { bg = 'var(--sat-red-bg)'; col = 'var(--sat-red)'; border = 'var(--sat-red)'; }
+                    return `<button type="button" class="action-btn secondary jump-prob-btn" data-prob="${p.num}" style="background:${bg};color:${col};border-color:${border};">
+                      Q${p.num} ${st.checked ? (st.isCorrect ? '✓' : '✗') : ''}
+                    </button>`;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+            <div class="box desmos">
+              <h2 class="box-title">Complete Session 1 Answer Key</h2>
+              <div class="box-content">
+                <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:0.45rem;font-size:0.9rem;">
+                  ${PRACTICE_PROBLEMS.map((p) => {
+                    const ansText = p.type === 'mc' ? `(${letters[p.correctIndex]})` : p.displayAnswer;
+                    return `<div style="background:#fff;padding:0.35rem 0.55rem;border-radius:0.35rem;border:1px solid var(--sat-border);">
+                      <strong>#${p.num}:</strong> ${ansText}
+                    </div>`;
+                  }).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="slide-header">
+          <h1 id="slide-heading" tabindex="-1">${slide.title}</h1>
+          <span class="slide-subtitle">${slide.subtitle || ''}</span>
+        </div>
+        <div class="slide-body">${bodyHTML}</div>
+      `;
+    }
+
+    // =========================================================================
+    // Dynamic Lab Updaters & Event Wiring per Slide
+    // =========================================================================
+    function updateSlopeLab() {
+      const wrap = document.getElementById('slope-lab-svg-wrap');
+      const readout = document.getElementById('slope-lab-readout');
+      if (!wrap || !readout) return;
+      const { m, b } = state.slopeLab;
+      document.getElementById('val-m').textContent = m;
+      document.getElementById('val-b').textContent = b;
+
+      const x1 = 0, y1 = b;
+      const x2 = 2, y2 = m * 2 + b;
+
+      wrap.innerHTML = createCoordSVG({
+        xMin: -6, xMax: 6, yMin: -6, yMax: 6, width: 350, height: 320,
+        label: `Line y = ${m}x + ${b}`,
+        drawFn: ({ toX, toY, clipLine }) => `
+          ${clipLine(m, b, '#1e5ab4', 3.2)}
+          <polyline points="${toX(x1)},${toY(y1)} ${toX(x2)},${toY(y1)} ${toX(x2)},${toY(y2)}" fill="none" stroke="#b41e1e" stroke-width="2" stroke-dasharray="4,3"/>
+          <circle cx="${toX(0)}" cy="${toY(b)}" r="5.5" fill="#142355"/>
+          <circle cx="${toX(x2)}" cy="${toY(y2)}" r="4.5" fill="#1e5ab4"/>
+          <text x="${toX(0) - 8}" y="${toY(b) - 8}" font-size="11" font-weight="700" fill="#142355" text-anchor="end">(0, ${b})</text>
+        `
+      });
+
+      const signB = b >= 0 ? `+ ${b}` : `&minus; ${Math.abs(b)}`;
+      const xInt = m === 0 ? 'None (parallel to x-axis)' : `(${(-b / m).toFixed(2).replace(/\.00$/, '')}, 0)`;
+      readout.innerHTML = `Equation: <strong><i>y</i> = ${m}<i>x</i> ${signB}</strong> &nbsp;|&nbsp; <i>y</i>-int: <strong>(0, ${b})</strong> &nbsp;|&nbsp; <i>x</i>-int: <strong>${xInt}</strong>`;
+    }
+
+    function updateStdLab() {
+      const wrap = document.getElementById('std-lab-svg-wrap');
+      const summary = document.getElementById('std-summary-readout');
+      const eqBox = document.getElementById('cover-eq-box');
+      if (!wrap || !summary) return;
+      const { A, B, C, swapped, mask } = state.stdLab;
+      document.getElementById('std-a-val').textContent = A;
+      document.getElementById('std-b-val').textContent = B;
+
+      if (eqBox) {
+        const xTerm = `<span class="cover-term ${mask === 'x' ? 'masked' : ''}">${A}<i>x</i></span>`;
+        const yTerm = `<span class="cover-term ${mask === 'y' ? 'masked' : ''}">${B >= 0 ? '+ ' + B : '&minus; ' + Math.abs(B)}<i>y</i></span>`;
+        const firstTerm = swapped ? `<span class="cover-term ${mask === 'y' ? 'masked' : ''}">${B}<i>y</i></span>` : xTerm;
+        const secondTerm = swapped ? `<span class="cover-term ${mask === 'x' ? 'masked' : ''}">${A >= 0 ? '+ ' + A : '&minus; ' + Math.abs(A)}<i>x</i></span>` : yTerm;
+        eqBox.innerHTML = `${firstTerm} ${secondTerm} <span>= ${C}</span>`;
+      }
+      document.querySelectorAll('.std-mask-btn').forEach((b) => {
+        b.setAttribute('aria-pressed', String(b.dataset.mask === mask));
+      });
+      const swapBtn = document.getElementById('std-swap-btn');
+      if (swapBtn) swapBtn.setAttribute('aria-pressed', String(swapped));
+
+      const xIntVal = A !== 0 ? (C / A) : null;
+      const yIntVal = B !== 0 ? (C / B) : null;
+
+      wrap.innerHTML = createCoordSVG({
+        xMin: -6, xMax: 6, yMin: -6, yMax: 6, width: 340, height: 320,
+        label: `Standard form line ${A}x + ${B}y = ${C}`,
+        drawFn: ({ toX, toY, clipLine, pad, height }) => {
+          let lineSVG = '';
+          if (B !== 0) {
+            lineSVG = clipLine(-A / B, C / B, '#1e5ab4', 3.2);
+          } else if (A !== 0) {
+            lineSVG = `<line x1="${toX(C / A)}" y1="${pad}" x2="${toX(C / A)}" y2="${height - pad}" stroke="#b41e1e" stroke-width="3.2"/>`;
+          }
+          const xDot = (xIntVal !== null && xIntVal >= -6 && xIntVal <= 6)
+            ? `<circle cx="${toX(xIntVal)}" cy="${toY(0)}" r="5.5" fill="#b41e1e"/>` : '';
+          const yDot = (yIntVal !== null && yIntVal >= -6 && yIntVal <= 6)
+            ? `<circle cx="${toX(0)}" cy="${toY(yIntVal)}" r="5.5" fill="#146e3c"/>` : '';
+          return `${lineSVG}${xDot}${yDot}`;
+        }
+      });
+
+      const slopeStr = B === 0 ? 'Undefined (Vertical)' : `&minus;(${A})/(${B}) = <strong>${(-A / B).toFixed(2).replace(/\.00$/, '')}</strong>`;
+      summary.innerHTML = `
+        &bull; <strong>Instant Slope (&minus;A/B):</strong> <span class="math"><i>m</i> = ${slopeStr}</span><br>
+        &bull; <strong>y-intercept (set x = 0):</strong> <span class="math">${yIntVal !== null ? `(0, ${yIntVal.toFixed(2).replace(/\.00$/, '')})` : 'None'}</span><br>
+        &bull; <strong>x-intercept (set y = 0):</strong> <span class="math">${xIntVal !== null ? `(${xIntVal.toFixed(2).replace(/\.00$/, '')}, 0)` : 'None'}</span>
+      `;
+    }
+
+    function updateRelLab() {
+      const wrap = document.getElementById('rel-lab-svg-wrap');
+      const readout = document.getElementById('rel-readout');
+      if (!wrap || !readout) return;
+      const { m, b, k, showPar, showPerp, showShift } = state.relLab;
+      document.getElementById('rel-m-val').textContent = m;
+      document.getElementById('rel-k-val').textContent = k > 0 ? `+${k}` : k;
+
+      const perpM = m !== 0 ? (-1 / m) : null;
+
+      wrap.innerHTML = createCoordSVG({
+        xMin: -6, xMax: 6, yMin: -6, yMax: 6, width: 350, height: 330,
+        label: 'Parallel, perpendicular, and translated lines comparison',
+        drawFn: ({ toX, toY, clipLine, pad, height }) => {
+          let svg = clipLine(m, b, '#142355', 3.2);
+          if (showPar) svg += clipLine(m, b - 2.5, '#1e5ab4', 2.5, '6,4');
+          if (showPerp) {
+            if (perpM !== null) svg += clipLine(perpM, b, '#b41e1e', 2.6);
+            else svg += `<line x1="${toX(0)}" y1="${pad}" x2="${toX(0)}" y2="${height - pad}" stroke="#b41e1e" stroke-width="2.6"/>`;
+          }
+          if (showShift) svg += clipLine(m, b + k, '#146e3c', 3);
+          return svg;
+        }
+      });
+
+      const perpText = perpM !== null ? `${perpM.toFixed(2).replace(/\.00$/, '')}` : 'Undefined (x = 0)';
+      readout.innerHTML = `
+        <div><strong>Base Line (Navy):</strong> <span class="math"><i>y</i> = ${m}<i>x</i> + ${b}</span></div>
+        <div style="color:var(--sat-blue);"><strong>Parallel (Dashed Blue):</strong> same slope <span class="math"><i>m</i><sub>2</sub> = ${m}</span></div>
+        <div style="color:var(--sat-red);"><strong>Perpendicular (Red):</strong> negative reciprocal <span class="math"><i>m</i><sub>2</sub> = ${perpText}</span></div>
+        <div style="color:var(--sat-green);"><strong>Shifted by k = ${k} (Green):</strong> <span class="math"><i>y</i> = ${m}<i>x</i> + (${b + k})</span></div>
+      `;
+    }
+
+    function updateSolLab() {
+      const wrap = document.getElementById('sol-lab-svg-wrap');
+      const statusBox = document.getElementById('sol-status-box');
+      if (!wrap || !statusBox) return;
+      const { a, b, c, d } = state.solLab;
+      ['a', 'b', 'c', 'd'].forEach((key) => {
+        document.getElementById(`sol-${key}-val`).textContent = state.solLab[key];
+      });
+
+      let statusHTML = '';
+      let intersectDot = '';
+
+      if (a !== c) {
+        const xSol = (d - b) / (a - c);
+        const ySol = a * xSol + b;
+        statusHTML = `
+          <div class="box solution">
+            <h2 class="box-title">Result: EXACTLY ONE SOLUTION (a &ne; c)</h2>
+            <div class="box-content">
+              Slopes differ (<span class="math">${a} &ne; ${c}</span>), so the lines intersect once at
+              <span class="math"><strong><i>x</i> = ${xSol.toFixed(2).replace(/\.00$/, '')}</strong></span>.
+            </div>
+          </div>`;
+        intersectDot = { x: xSol, y: ySol };
+      } else if (b !== d) {
+        statusHTML = `
+          <div class="box problem">
+            <h2 class="box-title">Result: ZERO / NO SOLUTION (a = c AND b &ne; d)</h2>
+            <div class="box-content">
+              <span class="math">${a}<i>x</i></span> cancels on both sides, leaving <span class="math"><strong>${b} = ${d} (FALSE!)</strong></span>. Parallel lines never intersect!
+            </div>
+          </div>`;
+      } else {
+        statusHTML = `
+          <div class="box desmos">
+            <h2 class="box-title">Result: INFINITELY MANY SOLUTIONS (a = c AND b = d)</h2>
+            <div class="box-content">
+              Both sides are identical (<span class="math"><strong>0 = 0, TRUE for all <i>x</i></strong></span>). Both equations graph the exact same line!
+            </div>
+          </div>`;
+      }
+
+      statusBox.innerHTML = statusHTML;
+      wrap.innerHTML = createCoordSVG({
+        xMin: -6, xMax: 6, yMin: -6, yMax: 6, width: 340, height: 310,
+        label: `System graph comparing y = ${a}x + ${b} and y = ${c}x + ${d}`,
+        drawFn: ({ toX, toY, clipLine }) => `
+          ${clipLine(a, b, '#1e5ab4', 3.5)}
+          ${clipLine(c, d, '#b41e1e', 2.8, '7,5')}
+          ${intersectDot && intersectDot.x >= -6 && intersectDot.x <= 6 && intersectDot.y >= -6 && intersectDot.y <= 6
+            ? `<circle cx="${toX(intersectDot.x)}" cy="${toY(intersectDot.y)}" r="6" fill="#146e3c"/>`
+            : ''}
+        `
+      });
+    }
+
+    function updateDesmosSliders() {
+      const wrap = document.getElementById('desmos-slider-svg');
+      const msg = document.getElementById('desmos-hit-msg');
+      if (!wrap || !msg) return;
+      const { a, k } = state.desmosSlider;
+      document.getElementById('des-a-val').textContent = a;
+      document.getElementById('des-k-val').textContent = k;
+
+      wrap.innerHTML = createCoordSVG({
+        xMin: -6, xMax: 4, yMin: -8, yMax: 2, width: 250, height: 205,
+        label: 'Desmos slider simulation for ax + ky = 6',
+        drawFn: ({ toX, toY, clipLine, pad, height }) => {
+          let line = '';
+          if (k !== 0) line = clipLine(-a / k, 6 / k, '#1e5ab4', 2.8);
+          else if (a !== 0) line = `<line x1="${toX(6 / a)}" y1="${pad}" x2="${toX(6 / a)}" y2="${height - pad}" stroke="#1e5ab4" stroke-width="2.8"/>`;
+          return `
+            ${line}
+            <circle cx="${toX(-2)}" cy="${toY(-6)}" r="5" fill="#b41e1e"/>
+            <circle cx="${toX(0)}" cy="${toY(-3)}" r="5" fill="#b41e1e"/>
+          `;
+        }
+      });
+
+      const hit = (a * -2 + k * -6 === 6) && (a * 0 + k * -3 === 6);
+      msg.className = `feedback-banner ${hit ? 'ok' : ''}`;
+      msg.innerHTML = hit
+        ? '&check; Bullseye! a = 3 and k = &minus;2 passes right through (&minus;2, &minus;6) and (0, &minus;3)!'
+        : `Current line: ${a}x + (${k})y = 6 — drag sliders to hit both red dots!`;
+    }
+
+    // Parse fraction or decimal string safely
+    function parseGridInAnswer(raw) {
+      const cleaned = raw.trim().replace(/\u2212/g, '-');
+      if (!cleaned) return NaN;
+      if (cleaned.includes('/')) {
+        const parts = cleaned.split('/');
+        if (parts.length !== 2) return NaN;
+        const num = Number(parts[0].trim());
+        const den = Number(parts[1].trim());
+        if (Number.isNaN(num) || Number.isNaN(den) || den === 0) return NaN;
+        return num / den;
+      }
+      return Number(cleaned);
+    }
+
+    function updateScoreBadge() {
+      const correct = Object.values(state.practice).filter((s) => s.isCorrect).length;
+      document.getElementById('score-badge').textContent = `Drill Score: ${correct} / 15`;
+    }
+
+    function wireSlideEvents(slide) {
+      const beginBtn = document.getElementById('hero-begin-btn');
+      if (beginBtn) beginBtn.addEventListener('click', () => goToSlide(1));
+
+      if (slide.id === 'sec1-lab') {
+        updateSlopeLab();
+        document.getElementById('slider-m').addEventListener('input', (e) => {
+          state.slopeLab.m = Number(e.target.value);
+          updateSlopeLab();
+        });
+        document.getElementById('slider-b').addEventListener('input', (e) => {
+          state.slopeLab.b = Number(e.target.value);
+          updateSlopeLab();
+        });
+        document.querySelectorAll('.slope-preset').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            state.slopeLab.m = Number(btn.dataset.m);
+            state.slopeLab.b = Number(btn.dataset.b);
+            document.getElementById('slider-m').value = state.slopeLab.m;
+            document.getElementById('slider-b').value = state.slopeLab.b;
+            updateSlopeLab();
+          });
+        });
+      }
+
+      if (slide.id === 'sec1-forms') {
+        updateStdLab();
+        document.getElementById('std-a').addEventListener('input', (e) => {
+          state.stdLab.A = Number(e.target.value);
+          updateStdLab();
+        });
+        document.getElementById('std-b').addEventListener('input', (e) => {
+          state.stdLab.B = Number(e.target.value);
+          updateStdLab();
+        });
+        document.querySelectorAll('.std-mask-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            state.stdLab.mask = btn.dataset.mask;
+            updateStdLab();
+          });
+        });
+        document.getElementById('std-swap-btn').addEventListener('click', () => {
+          state.stdLab.swapped = !state.stdLab.swapped;
+          updateStdLab();
+        });
+      }
+
+      if (slide.id === 'sec2-rel') {
+        updateRelLab();
+        document.getElementById('rel-m').addEventListener('input', (e) => {
+          state.relLab.m = Number(e.target.value);
+          updateRelLab();
+        });
+        document.getElementById('rel-k').addEventListener('input', (e) => {
+          state.relLab.k = Number(e.target.value);
+          updateRelLab();
+        });
+        document.querySelectorAll('.rel-toggle').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const k = btn.dataset.key;
+            state.relLab[k] = !state.relLab[k];
+            btn.setAttribute('aria-pressed', String(state.relLab[k]));
+            updateRelLab();
+          });
+        });
+      }
+
+      if (slide.id === 'sec3-sol') {
+        updateSolLab();
+        ['a', 'b', 'c', 'd'].forEach((k) => {
+          document.getElementById(`sol-${k}`).addEventListener('input', (e) => {
+            state.solLab[k] = Number(e.target.value);
+            updateSolLab();
+          });
+        });
+        document.querySelectorAll('.sol-preset').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            ['a', 'b', 'c', 'd'].forEach((k) => {
+              state.solLab[k] = Number(btn.dataset[k]);
+              document.getElementById(`sol-${k}`).value = state.solLab[k];
+            });
+            updateSolLab();
+          });
+        });
+      }
+
+      if (slide.id === 'sec4-desmos') {
+        updateDesmosSliders();
+        const calcReg = () => {
+          const x1 = Number(document.getElementById('reg-x1').value);
+          const y1 = Number(document.getElementById('reg-y1').value);
+          const x2 = Number(document.getElementById('reg-x2').value);
+          const y2 = Number(document.getElementById('reg-y2').value);
+          const out = document.getElementById('reg-output');
+          if (x1 === x2) {
+            out.textContent = `Vertical line: x = ${x1} (slope undefined)`;
+          } else {
+            const m = (y2 - y1) / (x2 - x1);
+            const b = y1 - m * x1;
+            out.textContent = `m = ${Number(m.toFixed(3))}, b = ${Number(b.toFixed(3))}  ⇒  y = ${Number(m.toFixed(3))}x ${b >= 0 ? '+ ' + Number(b.toFixed(3)) : '- ' + Math.abs(Number(b.toFixed(3)))}`;
+          }
+        };
+        ['reg-x1', 'reg-y1', 'reg-x2', 'reg-y2'].forEach((id) => {
+          document.getElementById(id).addEventListener('input', calcReg);
+        });
+        document.getElementById('des-a').addEventListener('input', (e) => {
+          state.desmosSlider.a = Number(e.target.value);
+          updateDesmosSliders();
+        });
+        document.getElementById('des-k').addEventListener('input', (e) => {
+          state.desmosSlider.k = Number(e.target.value);
+          updateDesmosSliders();
+        });
+      }
+
+      if (slide.id.startsWith('worked-')) {
+        const idx = Number(slide.id.split('-')[1]);
+        const maxSteps = idx === 1 ? 2 : 3;
+        document.getElementById('worked-next-step').addEventListener('click', () => {
+          if (state.workedSteps[idx] < maxSteps) {
+            state.workedSteps[idx]++;
+            renderCurrentSlide(false);
+          }
+        });
+        document.getElementById('worked-all-steps').addEventListener('click', () => {
+          state.workedSteps[idx] = maxSteps;
+          renderCurrentSlide(false);
+        });
+        document.getElementById('worked-reset-steps').addEventListener('click', () => {
+          state.workedSteps[idx] = 0;
+          renderCurrentSlide(false);
+        });
+      }
+
+      if (slide.probNum) {
+        const prob = PRACTICE_PROBLEMS.find((p) => p.num === slide.probNum);
+        const pState = state.practice[prob.num];
+
+        document.querySelectorAll('.mc-choice').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.choice);
+            if (pState.eliminated.has(idx)) return;
+            pState.selected = idx;
+            pState.checked = true;
+            pState.isCorrect = (idx === prob.correctIndex);
+            updateScoreBadge();
+            announce(pState.isCorrect ? 'Correct answer!' : 'Incorrect choice, review feedback.');
+            renderCurrentSlide(false);
+          });
+        });
+
+        document.querySelectorAll('.elim-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.elim);
+            if (pState.eliminated.has(idx)) pState.eliminated.delete(idx);
+            else pState.eliminated.add(idx);
+            renderCurrentSlide(false);
+          });
+        });
+
+        const gridForm = document.getElementById('gridin-form');
+        if (gridForm) {
+          const inputEl = document.getElementById(`gridin-input-${prob.num}`);
+          inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.isComposing) e.preventDefault();
+          });
+          gridForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const raw = inputEl.value;
+            pState.submittedValue = raw;
+            const parsed = parseGridInAnswer(raw);
+            pState.checked = true;
+            pState.isCorrect = !Number.isNaN(parsed) && Math.abs(parsed - prob.expectedValue) < 0.002;
+            updateScoreBadge();
+            announce(pState.isCorrect ? 'Correct answer!' : 'Not quite, try the hint or solution.');
+            renderCurrentSlide(false);
+          });
+        }
+
+        const hintBtn = document.getElementById('toggle-hint-btn');
+        const hintPanel = document.getElementById('prob-hint-panel');
+        hintBtn.addEventListener('click', async () => {
+          pState.showHint = !pState.showHint;
+          hintBtn.setAttribute('aria-expanded', String(pState.showHint));
+          hintBtn.textContent = pState.showHint ? 'Hide Hint' : 'Show Hint';
+          if (pState.showHint) showPanel(hintPanel);
+          else await hidePanel(hintPanel);
+        });
+
+        const solBtn = document.getElementById('toggle-sol-btn');
+        const solPanel = document.getElementById('prob-sol-panel');
+        solBtn.addEventListener('click', async () => {
+          pState.showSol = !pState.showSol;
+          solBtn.setAttribute('aria-expanded', String(pState.showSol));
+          solBtn.textContent = pState.showSol ? 'Hide Full Solution' : 'Reveal Step-by-Step Solution';
+          if (pState.showSol) showPanel(solPanel);
+          else await hidePanel(solPanel);
+        });
+
+        const resetBtn = document.getElementById('reset-prob-btn');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            pState.selected = null;
+            pState.submittedValue = '';
+            pState.checked = false;
+            pState.isCorrect = false;
+            updateScoreBadge();
+            renderCurrentSlide(false);
+          });
+        }
+      }
+
+      if (slide.id === 'summary') {
+        document.querySelectorAll('.jump-prob-btn').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const pNum = Number(btn.dataset.prob);
+            const targetIdx = SLIDES.findIndex((s) => s.probNum === pNum);
+            if (targetIdx !== -1) goToSlide(targetIdx);
+          });
+        });
+      }
+    }
+
+    // =========================================================================
+    // Navigation & Directional View Transitions
+    // =========================================================================
+    function buildSectionStrip() {
+      const nav = document.getElementById('section-nav');
+      const seen = new Set();
+      let html = '';
+      SLIDES.forEach((s, idx) => {
+        if (!seen.has(s.section)) {
+          seen.add(s.section);
+          html += `<button type="button" class="sec-btn" data-sec="${s.section}" data-idx="${idx}">${s.section}</button>`;
+        }
+      });
+      nav.innerHTML = html;
+      nav.querySelectorAll('.sec-btn').forEach((btn) => {
+        btn.addEventListener('click', () => goToSlide(Number(btn.dataset.idx)));
+      });
+    }
+
+    function renderCurrentSlide(clearCanvas = true) {
+      const slide = SLIDES[state.currentSlide];
+      const target = document.getElementById('slide-render-target');
+      target.innerHTML = renderSlideContent(slide);
+      wireSlideEvents(slide);
+
+      // Update title, counter, progress, section active state
+      document.title = `${slide.title} | Session 1 SAT Math`;
+      document.getElementById('slide-counter').textContent = `Slide ${state.currentSlide + 1} of ${SLIDES.length}`;
+      document.getElementById('progress-fill').style.width = `${((state.currentSlide + 1) / SLIDES.length) * 100}%`;
+      document.getElementById('prev-slide-btn').disabled = state.currentSlide === 0;
+      document.getElementById('next-slide-btn').disabled = state.currentSlide === SLIDES.length - 1;
+
+      document.querySelectorAll('.sec-btn').forEach((btn) => {
+        btn.setAttribute('aria-current', btn.dataset.sec === slide.section ? 'true' : 'false');
+      });
+
+      if (clearCanvas) clearScratchpad();
+    }
+
+    function navigateWithTransition(updateDOM, direction) {
+      if (!document.startViewTransition) {
+        updateDOM();
+        return;
+      }
+      try {
+        document.startViewTransition({
+          update: updateDOM,
+          types: [direction]
+        });
+      } catch {
+        // Fallback for browsers supporting startViewTransition(callback) without options object
+        document.startViewTransition(updateDOM);
+      }
+    }
+
+    function goToSlide(newIndex) {
+      if (newIndex < 0 || newIndex >= SLIDES.length || newIndex === state.currentSlide) return;
+      const direction = newIndex > state.currentSlide ? 'forward' : 'backward';
+      navigateWithTransition(() => {
+        state.currentSlide = newIndex;
+        renderCurrentSlide(true);
+      }, direction);
+    }
+
+    // =========================================================================
+    // Timer & Scratchpad Annotation Canvas
+    // =========================================================================
+    function updateTimerUI() {
+      const el = document.getElementById('timer-readout');
+      const m = String(Math.floor(state.timerSec / 60)).padStart(2, '0');
+      const s = String(state.timerSec % 60).padStart(2, '0');
+      el.textContent = `${m}:${s}`;
+      el.classList.toggle('warn', state.timerSec <= 25 && state.timerSec > 10);
+      el.classList.toggle('danger', state.timerSec <= 10);
+    }
+
+    document.getElementById('timer-toggle-btn').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      state.timerRunning = !state.timerRunning;
+      btn.setAttribute('aria-pressed', String(state.timerRunning));
+      btn.textContent = state.timerRunning ? 'Pause' : 'Start 75s';
+      if (state.timerRunning) {
+        state.timerId = setInterval(() => {
+          if (state.timerSec > 0) {
+            state.timerSec--;
+            updateTimerUI();
+          } else {
+            clearInterval(state.timerId);
+            state.timerRunning = false;
+            btn.setAttribute('aria-pressed', 'false');
+            btn.textContent = 'Start 75s';
+            announce('75 second SAT timer finished.');
+          }
+        }, 1000);
+      } else {
+        clearInterval(state.timerId);
+      }
+    });
+
+    document.getElementById('timer-reset-btn').addEventListener('click', () => {
+      clearInterval(state.timerId);
+      state.timerRunning = false;
+      state.timerSec = 75;
+      const btn = document.getElementById('timer-toggle-btn');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = 'Start 75s';
+      updateTimerUI();
+    });
+
+    // Scratchpad Canvas
+    const canvas = document.getElementById('scratchpad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    let penColor = '#1e5ab4';
+
+    function resizeCanvas() {
+      const shell = document.getElementById('slide-shell');
+      if (!shell) return;
+      canvas.width = shell.clientWidth;
+      canvas.height = shell.clientHeight;
+    }
+    function clearScratchpad() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    document.getElementById('draw-toggle-btn').addEventListener('click', (e) => {
+      const btn = e.currentTarget;
+      const active = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(active));
+      canvas.classList.toggle('active', active);
+      document.getElementById('draw-toolbar').hidden = !active;
+      if (active) resizeCanvas();
+    });
+
+    document.querySelectorAll('.color-swatch').forEach((sw) => {
+      sw.addEventListener('click', () => {
+        penColor = sw.dataset.color;
+        document.querySelectorAll('.color-swatch').forEach((b) => b.setAttribute('aria-pressed', String(b === sw)));
+      });
+    });
+    document.getElementById('draw-clear-btn').addEventListener('click', clearScratchpad);
+
+    canvas.addEventListener('pointerdown', (e) => {
+      if (!canvas.classList.contains('active')) return;
+      drawing = true;
+      const rect = canvas.getBoundingClientRect();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    canvas.addEventListener('pointermove', (e) => {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.lineWidth = 2.6;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = penColor;
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+    });
+    window.addEventListener('pointerup', () => { drawing = false; });
+
+    // Overview Modal (<dialog>)
+    const overviewModal = document.getElementById('overview-modal');
+    document.getElementById('overview-open-btn').addEventListener('click', () => {
+      const list = document.getElementById('overview-list');
+      list.innerHTML = SLIDES.map((s, idx) => `
+        <button type="button" class="overview-item ${idx === state.currentSlide ? 'current' : ''}" data-slide="${idx}">
+          <div style="font-size:0.74rem;color:var(--sat-muted);">${idx + 1}. ${s.section}</div>
+          <div>${s.title}</div>
+        </button>
+      `).join('');
+      list.querySelectorAll('.overview-item').forEach((item) => {
+        item.addEventListener('click', () => {
+          overviewModal.close();
+          goToSlide(Number(item.dataset.slide));
+        });
+      });
+      overviewModal.showModal();
+    });
+    document.getElementById('overview-close-btn').addEventListener('click', () => overviewModal.close());
+
+    // Bottom Navigation & Keyboard Arrow Shortcuts
+    document.getElementById('prev-slide-btn').addEventListener('click', () => goToSlide(state.currentSlide - 1));
+    document.getElementById('next-slide-btn').addEventListener('click', () => goToSlide(state.currentSlide + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (overviewModal.open) return;
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.key === 'ArrowRight') goToSlide(state.currentSlide + 1);
+      if (e.key === 'ArrowLeft') goToSlide(state.currentSlide - 1);
+    });
+
+    // Boot
+    buildSectionStrip();
+    renderCurrentSlide(true);
+    setTimeout(resizeCanvas, 50);
+  </script>
+</body>
+</html>
